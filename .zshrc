@@ -147,7 +147,7 @@ alias git-rm-ignored='git rm --cached $(git ls-files -i -c -X .gitignore)'
 
 
 # Node.js
-#
+
 NODE_VERSION=24
 
 command -v fnm &>/dev/null \
@@ -177,6 +177,7 @@ function y() {
 
 
 # other
+
 [[ -f $HOME/.orbstack/shell/init.zsh ]] \
     && source "$HOME/.orbstack/shell/init.zsh"
 
