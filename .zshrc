@@ -1,4 +1,4 @@
-# shellcheck shell=zsh
+# shellcheck disable=SC2034,SC2168,SC2128,SC2206
 
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
@@ -106,7 +106,8 @@ zstyle ':omz:plugins:eza' 'header' yes
 zstyle ':omz:plugins:eza' 'icons' no
 zstyle ':omz:plugins:eza' 'color-scale' size
 
-source $ZSH/oh-my-zsh.sh
+# shellcheck disable=SC1091
+source "$ZSH/oh-my-zsh.sh"
 
 # User configuration
 
@@ -168,7 +169,8 @@ fi
 # yazi
 
 function y() {
-    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+    local tmp
+    tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
     command yazi "$@" --cwd-file="$tmp"
     IFS= read -r -d '' cwd < "$tmp"
     [ "$cwd" != "$PWD" ] && [ -d "$cwd" ] && builtin cd -- "$cwd"
@@ -178,9 +180,11 @@ function y() {
 
 # other
 
+# shellcheck disable=SC1091
 [[ -f $HOME/.orbstack/shell/init.zsh ]] \
     && source "$HOME/.orbstack/shell/init.zsh"
 
+# shellcheck disable=SC1091
 [[ -f $HOME/.acme.sh/acme.sh.env ]] \
     && source "$HOME/.acme.sh/acme.sh.env"
 
@@ -233,12 +237,14 @@ priority+=("/**/sbin" "/**/bin")
 
 for pat in $priority; do
     local -a matches
+    # shellcheck disable=SC2296
     matches=(${(M)current_path:#$~pat})
     new_path+=($matches)
     current_path=(${current_path:|matches})
 done
 
 new_path+=($current_path)
+# shellcheck disable=SC1036
 path=($^new_path(N-/))
 
 
@@ -257,9 +263,11 @@ for root in "${project_roots[@]}"; do
         $root/*)
             dir=$PWD
 
+            # shellcheck disable=SC2053
             while [[ $dir != $root ]]; do
                 if [[ -f $dir/${UV_PROJECT_ENVIRONMENT:-.venv}/bin/activate ]]; then
                     old_pwd=$PWD
+                    # shellcheck disable=SC1091
                     cd "$dir" \
                         && source "${UV_PROJECT_ENVIRONMENT:-.venv}/bin/activate"
                     cd "$old_pwd" || true
@@ -271,6 +279,7 @@ for root in "${project_roots[@]}"; do
 
             dir=$PWD
 
+            # shellcheck disable=SC2053
             while [[ $dir != $root ]]; do
                 if [[ -d $dir/node_modules/.bin ]]; then
                     path=("$dir/node_modules/.bin" "${path[@]}")

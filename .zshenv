@@ -1,11 +1,10 @@
-# shellcheck shell=zsh
-
 # .zshenv is always sourced
 
 export PATH=$HOME/.local/bin:$HOME/bin:$PATH
 
 export EDITOR=nvim
 
+# shellcheck disable=SC1091
 [[ -f $HOME/.cargo/env ]] \
     && source "$HOME/.cargo/env"
 
