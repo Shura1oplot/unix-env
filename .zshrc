@@ -157,6 +157,12 @@ command -v fnm &>/dev/null \
     || true
 
 
+# pnpm
+export PNPM_HOME=$HOME/Library/pnpm
+export PATH=$PNPM_HOME/bin:$PATH
+# pnpm end
+
+
 # Ghostty
 
 if [[ $TERM_PROGRAM = ghostty || $TERM = xterm-ghostty ]]; then
