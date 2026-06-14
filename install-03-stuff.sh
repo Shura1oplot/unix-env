@@ -8,3 +8,5 @@ git config --global credential.helper store
 # shellcheck disable=SC2028
 echo -e "\n\nprecedence ::ffff:0:0/96  100\n" \
     | sudo tee -a /etc/gai.conf
+
+git clone https://github.com/Shura1oplot/unix-env
