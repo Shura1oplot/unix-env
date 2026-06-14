@@ -260,6 +260,7 @@ project_roots=(
     "/Users/alexandergordeev/Documents/GitHub"
     "/Users/alexandergordeev/Documents/Projects"
     "/home/tedo/projects"
+    "/root/agents"
 )
 
 for root in "${project_roots[@]}"; do
