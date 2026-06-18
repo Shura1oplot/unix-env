@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+command -v apt-get &>/dev/null || exit
+
 sudo apt-get update
 sudo apt-get dist-upgrade -y
 

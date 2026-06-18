@@ -3,7 +3,8 @@
 set -euo pipefail
 
 
-touch /.dockerenv &>/dev/null || true
+[[ $(id -u) == 0 ]] \
+    && touch /.dockerenv &>/dev/null
 
 if command -v brew >/dev/null 2>&1; then
     brew update

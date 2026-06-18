@@ -6,11 +6,9 @@ THIS_SCRIPT_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 
 . "$THIS_SCRIPT_DIR/.env"
 
-uv python install --default "$PYTHON_VERSION"
+uv python install --preview-features python-install-default \
+    --default --upgrade "$PYTHON_VERSION"
 
-uv tool install black
-uv tool install ruff
-uv tool install basedpyright
-uv tool install pylint
-
-uv tool install markitdown
+for tool in black ruff basedpyright pylint markitdown; do
+    uv tool install "$tool"
+done
