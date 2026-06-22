@@ -139,6 +139,7 @@ export EDITOR=nvim
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias git-rm-ignored='git rm --cached $(git ls-files -i -c -X .gitignore)'
+alias sshl='ssh -L localhost:8000:localhost:8000'
 
 # .zshrc is for interactive shells
 
