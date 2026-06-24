@@ -201,6 +201,14 @@ command -v direnv &>/dev/null \
     && eval "$(direnv hook zsh)"
 
 
+# Android SDK stuff
+
+export ANDROID_HOME=$HOME/Library/Android/sdk
+export SDKMAN_DIR=$HOME/.sdkman
+[[ -s $HOME/.sdkman/bin/sdkman-init.sh ]] \
+    && source "$HOME/.sdkman/bin/sdkman-init.sh"
+export PATH=$PATH:$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin
+
 # PATH sorter
 # Must be in the end of .zshrc
 
