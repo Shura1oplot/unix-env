@@ -144,10 +144,6 @@ alias sshl='ssh -L localhost:8000:localhost:8000'
 # .zshrc is for interactive shells
 
 
-# Hack for PuTTY (outdated?)
-# printf "\e[?1004l"  # FocusIn/ FocusOut
-
-
 # Node.js
 
 NODE_VERSION=24
