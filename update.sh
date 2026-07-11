@@ -17,8 +17,12 @@ if [[ $(uname) == Linux ]]; then
 fi
 
 if command -v brew &>/dev/null; then
+    [[ $(id -u) == 0 ]] \
+        && touch /.dockerenv
     brew update
     brew upgrade --yes
+    [[ $(id -u) == 0 && -f /.dockerenv ]] \
+        && rm /.dockerenv
 fi
 
 if command -v uv &>/dev/null; then
