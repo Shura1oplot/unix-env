@@ -181,7 +181,7 @@ function y() {
 }
 
 
-# other
+# other small stuff
 
 # shellcheck disable=SC1091
 [[ -f $HOME/.orbstack/shell/init.zsh ]] \
@@ -205,8 +205,43 @@ export SDKMAN_DIR=$HOME/.sdkman
     && source "$HOME/.sdkman/bin/sdkman-init.sh"
 export PATH=$PATH:$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin
 
+
+# bun
+
+if [[ -d $HOME/.bun ]]; then
+    export BUN_INSTALL=$HOME/.bun
+    export PATH=$BUN_INSTALL/bin:$PATH
+fi
+
+# pi
+
+local fnm_latest_bin=""
+
+for dir in "$HOME"/.local/state/fnm_multishells/*_*(N/); do
+    local timestamp=${dir:t}
+    timestamp=${timestamp##*_}
+
+    [[ $timestamp == <-> ]] || continue
+    [[ -x "$dir/bin/pi" ]] || continue
+
+    if [[ -z "$fnm_latest_bin" ]] ||
+            (( timestamp > ${fnm_latest_bin:h:t##*_} )); then
+        fnm_latest_bin="$dir/bin"
+    fi
+done
+
+if [[ -n $fnm_latest_bin ]]; then
+    export PATH=$fnm_latest_bin:$PATH
+fi
+
+unset fnm_multishell_root fnm_latest_bin dir timestamp
+
+
+# =============================================================================
 # PATH sorter
-# Must be in the end of .zshrc
+# =============================================================================
+
+# Must be in the end of .zshrc, but before agents stuff
 
 typeset -aU path
 local -a priority new_path current_path
@@ -258,10 +293,14 @@ new_path+=($current_path)
 # shellcheck disable=SC1036
 path=($^new_path(N-/))
 
+unset priority new_path current_path pat matches
 
+
+# =============================================================================
 # agents
+# =============================================================================
 
-project_roots=(
+local -a project_roots=(
     "/Users/alexandergordeev/Documents/GitHub"
     "/Users/alexandergordeev/Documents/Projects"
     "/home/tedo/projects"
@@ -305,3 +344,10 @@ for root in "${project_roots[@]}"; do
         ;;
     esac
 done
+
+unset project_roots root dir old_pwd
+
+# =============================================================================
+
+
+# echo ".zshrc ok"
