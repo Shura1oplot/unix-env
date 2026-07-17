@@ -143,6 +143,7 @@ alias sshl='ssh -L localhost:8000:localhost:8000'
 
 # .zshrc is for interactive shells
 
+# =============================================================================
 
 # Node.js
 
@@ -196,6 +197,15 @@ export PATH=$HOME/.browser-use/bin:$HOME/.browser-use-env/bin:$PATH
 command -v direnv &>/dev/null \
     && eval "$(direnv hook zsh)"
 
+# shellcheck disable=SC1091
+[[ -f $HOME/.cargo/env ]] \
+    && source "$HOME/.cargo/env"
+
+# shellcheck disable=SC1091
+if [[ -d $HOME/.bun ]]; then
+    export BUN_INSTALL=$HOME/.bun
+    export PATH=$BUN_INSTALL/bin:$PATH
+fi
 
 # Android SDK stuff
 
@@ -204,14 +214,6 @@ export SDKMAN_DIR=$HOME/.sdkman
 [[ -s $HOME/.sdkman/bin/sdkman-init.sh ]] \
     && source "$HOME/.sdkman/bin/sdkman-init.sh"
 export PATH=$PATH:$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin
-
-
-# bun
-
-if [[ -d $HOME/.bun ]]; then
-    export BUN_INSTALL=$HOME/.bun
-    export PATH=$BUN_INSTALL/bin:$PATH
-fi
 
 # pi
 
@@ -347,7 +349,7 @@ done
 
 unset project_roots root dir old_pwd
 
-# =============================================================================
 
+# =============================================================================
 
 # echo ".zshrc ok"
