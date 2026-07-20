@@ -4,7 +4,7 @@ set -euo pipefail
 
 THIS_SCRIPT_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 
-. "$THIS_SCRIPT_DIR/.env"
+source "$THIS_SCRIPT_DIR/.env"
 
 
 if [[ $(uname) == Linux ]]; then
@@ -29,8 +29,8 @@ if command -v uv &>/dev/null; then
     uv self update || true
     uv python install --preview-features python-install-default \
         --default --upgrade "$PYTHON_VERSION"
-    uv tool upgrade --all ||
-        uv tool upgrade --reinstall --all
+    uv tool upgrade --all \
+        || uv tool upgrade --reinstall --all
 fi
 
 if command -v fnm &>/dev/null; then
@@ -47,8 +47,10 @@ command -v codex &>/dev/null \
 command -v claude &>/dev/null \
     && claude update
 
-command -v pi &>/dev/null \
-    && pi update
+if command -v pi &>/dev/null; then
+    pi update
+    pi update --extensions
+fi
 
 command -v hermes &>/dev/null \
     && hermes update

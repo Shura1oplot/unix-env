@@ -4,7 +4,3 @@ if [[ $- =~ i && -z "$TMUX" && -n "$SSH_TTY" ]]; then
         exec tmux attach-session -t ssh_tmux
     fi
 fi
-
-# >>> Codex installer >>>
-export PATH="/Users/alexandergordeev/.local/bin:$PATH"
-# <<< Codex installer <<<
