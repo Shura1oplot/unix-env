@@ -53,6 +53,10 @@
 - Use `pydantic-settings` if relevant
 - Use `tqdm` and colored log for interactive scripts (output to tty)
 
+## Lint
+
+- If `reportUnusedCallResult` is intended, add `_ = `, e.g. `_ = func()`
+
 ## Shell
 
 - Bash 5+
