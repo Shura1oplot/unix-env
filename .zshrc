@@ -182,24 +182,33 @@ function y() {
 }
 
 
-# other small stuff
+# orbstack
 
 # shellcheck disable=SC1091
 [[ -f $HOME/.orbstack/shell/init.zsh ]] \
     && source "$HOME/.orbstack/shell/init.zsh"
 
+
+# acme.sh
+
 # shellcheck disable=SC1091
 [[ -f $HOME/.acme.sh/acme.sh.env ]] \
     && source "$HOME/.acme.sh/acme.sh.env"
 
+
+# browser-use
+
 export PATH=$HOME/.browser-use/bin:$HOME/.browser-use-env/bin:$PATH
 
-command -v direnv &>/dev/null \
-    && eval "$(direnv hook zsh)"
+
+# cargo
 
 # shellcheck disable=SC1091
 [[ -f $HOME/.cargo/env ]] \
     && source "$HOME/.cargo/env"
+
+
+# bun
 
 # shellcheck disable=SC1091
 if [[ -d $HOME/.bun ]]; then
@@ -207,13 +216,28 @@ if [[ -d $HOME/.bun ]]; then
     export PATH=$BUN_INSTALL/bin:$PATH
 fi
 
-# Android SDK stuff
+
+# Android SDK
 
 export ANDROID_HOME=$HOME/Library/Android/sdk
 export SDKMAN_DIR=$HOME/.sdkman
+
 [[ -s $HOME/.sdkman/bin/sdkman-init.sh ]] \
     && source "$HOME/.sdkman/bin/sdkman-init.sh"
+
 export PATH=$PATH:$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin
+
+
+# gcloud
+
+GLOUD_SDK_PATH=$HOME/.google-cloud-sdk
+
+[[ -f $GLOUD_SDK_PATH/path.zsh.inc ]] \
+    && source "$GLOUD_SDK_PATH/path.zsh.inc"
+
+[[ -f $GLOUD_SDK_PATH/completion.zsh.inc ]] \
+    && source "$GLOUD_SDK_PATH/completion.zsh.inc"
+
 
 # pi
 
@@ -238,6 +262,11 @@ fi
 
 unset fnm_multishell_root fnm_latest_bin dir timestamp
 
+
+# direnv
+
+command -v direnv &>/dev/null \
+    && eval "$(direnv hook zsh)"
 
 # =============================================================================
 # PATH sorter
