@@ -184,3 +184,7 @@ A framework structures the work but does not constitute evidence. Do not fill fr
 
 - Log any issues involving missing or malfunctioning MCPs, agent tools, and CLI tools to `./tools.log`
 - Log any issues accessing websites to `./web.log`: bot protection, JavaScript-heavy websites, TLS certificate errors, login protection, paywalls, etc.
+- On failure, do not apologise; instead:
+  - fix consequences
+  - fix the cause
+  - reflect and suggest ensuring non-recurrence (e.g., clarify AGENTS.md or PROJECT.md)

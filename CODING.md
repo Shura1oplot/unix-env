@@ -1,7 +1,7 @@
 # Guidelines
 
 - Write scripts, not enterprise software
-- Follow the KISS principle; simplicity first
+- Follow the KISS and the YAGNI principles; simplicity first
 - Hard cutover; no backward compatibility
 - Surgical changes; edit only what you must:
   - No features or flexibility beyond what was asked
@@ -44,29 +44,35 @@
 ## Python
 
 - Python 3.13+
-- `uv` to manage libs
-- Lint: `ruff` and `basedpyright`
-- Format with `black`
+- Use `uv` to manage libs
+- Lint: `ruff` and `basedpyright` (both mandatory), `vkus-python lint` if available
+- Format (mandatory): use either `black` or `vkus-python format` (if available)
 - No outdated/abandoned libraries
-- Prefer async
+- Prefer `async`
+- Use for cli args: `argparse.Namespace` + `pydantic.BaseModel.model_validate` -> no basedpyright warnings
+- Use `pydantic-settings` if relevant
+- Use `tqdm` and colored log for interactive scripts (output to tty)
 
 ## Shell
 
-- Bash 4+
-- Use GNU tools, modern cli tools; POSIX compatibility does not required
-- Bashisms are preferable (e.g., `<<<`, `&>`, `[[ ]]`)
+- Bash 5+
+- Use GNU tools, modern cli tools; POSIX compatibility is not required
+- Use bashisms (e.g., `<<<`, `&>`, `[[ ]]`)
 - Use `$!/usr/bin/env bash`
-- `set -euo pipefail` is a must
+- Add global `set -euo pipefail` in scripts, but not in libs (loaded using `source ./lib.sh`)
   - You can temporary turn off `-e` (`set +e`) and `-o pipefail` for a block of code if it simplifies the logic
-- Avoid long and complex awk, sed, grep and jq scripts
+- Avoid long and complex awk, sed, grep and jq queries; simplify if possible, or switch to Python
+- Lint: use `shellcheck` (mandatory), use `vkus-bash lint` if available
+- Format (mandatory): use either `shfmt` or `vkus-bash format` (if available)
 
 # Checklist
 
 After coding is done, check and report:
 
-- [ ] I followed the KISS principle
-- [ ] No banned techniques used
+- [ ] I followed the KISS and the YAGNI principles
+- [ ] I followed the guidelines
 - [ ] No linting errors or warnings
+- [ ] No banned techniques used
 - [ ] I have cleaned up the workspace
 
-Comment on every unchecked mark
+Comment on every unchecked mark.
