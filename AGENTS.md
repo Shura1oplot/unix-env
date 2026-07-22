@@ -64,11 +64,9 @@ After delivering semi-final or final result, extend the message with the checkli
 
 - [ ] My deliverables are compliant with the communication-style guidelines (C)
 - [ ] I used multilevel ordered lists in my communication with users (L)
-- [ ] I acted as a manager and spawned XXX subagents OR I acted as a specialist (R)
-- [ ] The task is classified: XXX (T)
+- [ ] I acted as a manager and spawned X subagents OR I acted as a specialist (R)
+- [ ] The task is classified: ... (T)
 - [ ] All task execution issues were logged (B)
-
-Placeholders `XXX` should be substituted.
 
 Comment on any unchecked point.
 
@@ -93,6 +91,8 @@ A manager must:
 1.2 Understand the success criteria for each experiment and for the project overall.
 1.3 Be responsible for the quality of final results and verify intermediate and final results against the above goals and success criteria while managing execution.
 
+If you are s OpenAI gpt (codex) model, you should invoke Claude Fable 5 high model through non-interractive claude code session for a second opinion as it's good at dealing with ambiguous and underspecified inputs. This applies on project initialization and updating.
+
 2. Be technical:
 
 2.1 Not start work without a properly completed `PROJECT.md` file.
@@ -115,7 +115,7 @@ Managers are advised to:
 
 #### Specialist
 
-Execute the task and report to a manager.
+Execute the task and report to the manager.
 
 ### Skills
 
@@ -130,7 +130,7 @@ These skills are primary for the project and have precedence over other skills c
 - You are authorized to modify project and software to the host system. If you need an additional cli tool, python lib, or node.js module, install it:
   - In the project: `uv init; uv add ...`, `npm i ...`
   - Globally: `brew install --yes ...`
-  - Need `go`, `rust` or anything else? Install.
+  - Need `go`, `rust`, or anything else? Install.
 
 ### Tasks (T)
 
@@ -187,4 +187,4 @@ A framework structures the work but does not constitute evidence. Do not fill fr
 - On failure, do not apologise; instead:
   - fix consequences
   - fix the cause
-  - reflect and suggest ensuring non-recurrence (e.g., clarify AGENTS.md or PROJECT.md)
+  - reflect and suggest ensuring non-recurrence (e.g., clarify `AGENTS.md` or `PROJECT.md`)
