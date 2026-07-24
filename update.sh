@@ -60,3 +60,5 @@ command -v openclaw &>/dev/null \
 
 command -v skills &>/dev/null \
     && skills update --global --yes
+
+"$THIS_SCRIPT_DIR/sync-agent-env.sh"

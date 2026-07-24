@@ -1,7 +1,11 @@
 # shellcheck disable=SC2034,SC2168,SC2128,SC2206
 
-# If you come from bash you might have to change your $PATH.
-export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
+# .zshrc is sourced by interactive shells only.
+#
+# Environment variables and PATH live in .zshenv, so that non-interactive
+# shells, including the ones agents create, get the same environment. Keep only
+# interactive configuration here: Oh My Zsh, themes, aliases, completions,
+# keybindings, and shell functions.
 
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -111,22 +115,6 @@ source "$ZSH/oh-my-zsh.sh"
 
 # User configuration
 
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='nvim'
-# fi
-export EDITOR=nvim
-
-# Compilation flags
-# export ARCHFLAGS="-arch $(uname -m)"
-
 # Set personal aliases, overriding those provided by Oh My Zsh libs,
 # plugins, and themes. Aliases can be placed here, though Oh My Zsh
 # users are encouraged to define aliases within a top-level file in
@@ -134,18 +122,15 @@ export EDITOR=nvim
 # - $ZSH_CUSTOM/aliases.zsh
 # - $ZSH_CUSTOM/macos.zsh
 # For a full list of active aliases, run `alias`.
-#
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
 alias git-rm-ignored='git rm --cached $(git ls-files -i -c -X .gitignore)'
 alias sshl='ssh -L localhost:8000:localhost:8000'
-
-# .zshrc is for interactive shells
 
 # =============================================================================
 
 # Node.js
+#
+# Globally installed Node CLIs are already on PATH through the fnm default
+# alias, which .zshenv adds. This block only enables per-shell `fnm use`.
 
 NODE_VERSION=24
 
@@ -153,12 +138,6 @@ command -v fnm &>/dev/null \
     && eval "$(fnm env --shell zsh)" \
     && fnm use "$NODE_VERSION" &>/dev/null \
     || true
-
-
-# pnpm
-export PNPM_HOME=$HOME/Library/pnpm
-export PATH=$PNPM_HOME/bin:$PATH
-# pnpm end
 
 
 # Ghostty
@@ -182,85 +161,18 @@ function y() {
 }
 
 
-# orbstack
+# SDKMAN
 
 # shellcheck disable=SC1091
-[[ -f $HOME/.orbstack/shell/init.zsh ]] \
-    && source "$HOME/.orbstack/shell/init.zsh"
-
-
-# acme.sh
-
-# shellcheck disable=SC1091
-[[ -f $HOME/.acme.sh/acme.sh.env ]] \
-    && source "$HOME/.acme.sh/acme.sh.env"
-
-
-# browser-use
-
-export PATH=$HOME/.browser-use/bin:$HOME/.browser-use-env/bin:$PATH
-
-
-# cargo
-
-# shellcheck disable=SC1091
-[[ -f $HOME/.cargo/env ]] \
-    && source "$HOME/.cargo/env"
-
-
-# bun
-
-# shellcheck disable=SC1091
-if [[ -d $HOME/.bun ]]; then
-    export BUN_INSTALL=$HOME/.bun
-    export PATH=$BUN_INSTALL/bin:$PATH
-fi
-
-
-# Android SDK
-
-export ANDROID_HOME=$HOME/Library/Android/sdk
-export SDKMAN_DIR=$HOME/.sdkman
-
-[[ -s $HOME/.sdkman/bin/sdkman-init.sh ]] \
-    && source "$HOME/.sdkman/bin/sdkman-init.sh"
-
-export PATH=$PATH:$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin
+[[ -s $SDKMAN_DIR/bin/sdkman-init.sh ]] \
+    && source "$SDKMAN_DIR/bin/sdkman-init.sh"
 
 
 # gcloud
 
-GLOUD_SDK_PATH=$HOME/.google-cloud-sdk
-
-[[ -f $GLOUD_SDK_PATH/path.zsh.inc ]] \
-    && source "$GLOUD_SDK_PATH/path.zsh.inc"
-
-[[ -f $GLOUD_SDK_PATH/completion.zsh.inc ]] \
-    && source "$GLOUD_SDK_PATH/completion.zsh.inc"
-
-
-# pi
-
-local fnm_latest_bin=""
-
-for dir in "$HOME"/.local/state/fnm_multishells/*_*(N/); do
-    local timestamp=${dir:t}
-    timestamp=${timestamp##*_}
-
-    [[ $timestamp == <-> ]] || continue
-    [[ -x "$dir/bin/pi" ]] || continue
-
-    if [[ -z "$fnm_latest_bin" ]] ||
-            (( timestamp > ${fnm_latest_bin:h:t##*_} )); then
-        fnm_latest_bin="$dir/bin"
-    fi
-done
-
-if [[ -n $fnm_latest_bin ]]; then
-    export PATH=$fnm_latest_bin:$PATH
-fi
-
-unset fnm_multishell_root fnm_latest_bin dir timestamp
+# shellcheck disable=SC1091
+[[ -f $HOME/.google-cloud-sdk/completion.zsh.inc ]] \
+    && source "$HOME/.google-cloud-sdk/completion.zsh.inc"
 
 
 # direnv
@@ -268,115 +180,16 @@ unset fnm_multishell_root fnm_latest_bin dir timestamp
 command -v direnv &>/dev/null \
     && eval "$(direnv hook zsh)"
 
+
 # =============================================================================
 # PATH sorter
 # =============================================================================
 
-# Must be in the end of .zshrc, but before agents stuff
+# Defined in .zshenv, which also activates the project environment. Rerun here
+# because the blocks above add to PATH.
 
-typeset -aU path
-local -a priority new_path current_path
-current_path=($path)
-
-priority=(
-    "$PWD/.*/**"
-    "$PWD/**"
-    "$HOME/.local/bin"
-    "$HOME/.*/**"
-    "$HOME/**"
-)
-
-if [[ -n $HOMEBREW_PREFIX ]]; then
-    priority+=(
-        "$HOMEBREW_PREFIX/opt/**/gnubin"
-        "$HOMEBREW_PREFIX/opt/**/libexec/**"
-        "$HOMEBREW_PREFIX/opt/**"
-        "$HOMEBREW_PREFIX/**/gnubin"
-        "$HOMEBREW_PREFIX/**/libexec/**"
-        "$HOMEBREW_PREFIX/**/sbin"
-        "$HOMEBREW_PREFIX/**/bin"
-        "$HOMEBREW_PREFIX/**"
-    )
-fi
-
-case $(uname) in
-    Darwin) priority+=("/Applications/**"
-                       "/Library/**"
-                       "/System/**") ;;
-    Linux)  priority+=("/snap/**"
-                       "/opt/**"
-                       "/usr/local/sbin"
-                       "/usr/local/bin"
-                       "/usr/local/**") ;;
-esac
-
-priority+=("/**/sbin" "/**/bin")
-
-for pat in $priority; do
-    local -a matches
-    # shellcheck disable=SC2296
-    matches=(${(M)current_path:#$~pat})
-    new_path+=($matches)
-    current_path=(${current_path:|matches})
-done
-
-new_path+=($current_path)
-# shellcheck disable=SC1036
-path=($^new_path(N-/))
-
-unset priority new_path current_path pat matches
-
-
-# =============================================================================
-# agents
-# =============================================================================
-
-local -a project_roots=(
-    "/Users/alexandergordeev/Documents/GitHub"
-    "/Users/alexandergordeev/Documents/Projects"
-    "/home/tedo/projects"
-    "/root/agents"
-)
-
-for root in "${project_roots[@]}"; do
-    [[ -d $root ]] || continue
-
-    case $PWD in
-        $root/*)
-            dir=$PWD
-
-            # shellcheck disable=SC2053
-            while [[ $dir != $root ]]; do
-                if [[ -f $dir/${UV_PROJECT_ENVIRONMENT:-.venv}/bin/activate ]]; then
-                    old_pwd=$PWD
-                    # shellcheck disable=SC1091
-                    cd "$dir" \
-                        && source "${UV_PROJECT_ENVIRONMENT:-.venv}/bin/activate"
-                    cd "$old_pwd" || true
-                    break
-                fi
-
-                dir=${dir:h}
-            done
-
-            dir=$PWD
-
-            # shellcheck disable=SC2053
-            while [[ $dir != $root ]]; do
-                if [[ -d $dir/node_modules/.bin ]]; then
-                    path=("$dir/node_modules/.bin" "${path[@]}")
-                    break
-                fi
-
-                dir=${dir:h}
-            done
-
-            break
-        ;;
-    esac
-done
-
-unset project_roots root dir old_pwd
+(( $+functions[zsh_sort_path] )) \
+    && zsh_sort_path
 
 
 # =============================================================================
