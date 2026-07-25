@@ -1,10 +1,4 @@
-# .zshenv is always sourced: interactive, non-interactive, login, and agent
-# shells. Everything that only sets environment variables, PATH included, lives
-# here, so that non-interactive agent sessions get the same environment as a
-# terminal.
-#
-# .zshrc is sourced by interactive shells only. Prompts, themes, aliases,
-# completions, keybindings, and shell functions stay there.
+# .zshenv is always sourced: interactive, non-interactive, login, and agent shells.
 
 export PATH=$HOME/.local/bin:$HOME/bin:$PATH
 
@@ -19,9 +13,6 @@ export EDITOR=nvim
 
 
 # Brew: gnubin
-#
-# $OSTYPE instead of $(uname), and the HOMEBREW_PREFIX guard, keep this file
-# fork-free for child shells: .zshenv runs for every zsh, scripts included.
 
 brew_path=
 
@@ -30,10 +21,8 @@ case $OSTYPE in
     linux*)  brew_path=/home/linuxbrew/.linuxbrew ;;
 esac
 
-if [[ -e $brew_path/bin/brew ]] \
-    && [[ -z $HOMEBREW_PREFIX || :$PATH: != *:$brew_path/bin:* ]]; then
-    eval "$("$brew_path/bin/brew" shellenv)"
-fi
+[[ -e $brew_path/bin/brew ]] \
+    && eval "$("$brew_path/bin/brew" shellenv)"
 
 
 if [[ $OSTYPE == darwin* && -n $HOMEBREW_PREFIX ]]; then
@@ -81,6 +70,14 @@ export PNPM_HOME=$HOME/Library/pnpm
 export PATH=$PNPM_HOME/bin:$PATH
 
 
+# bun
+
+if [[ -d $HOME/.bun ]]; then
+    export BUN_INSTALL=$HOME/.bun
+    export PATH=$BUN_INSTALL/bin:$PATH
+fi
+
+
 # orbstack
 
 # shellcheck disable=SC1091
@@ -98,14 +95,6 @@ export PATH=$PNPM_HOME/bin:$PATH
 # browser-use
 
 export PATH=$HOME/.browser-use/bin:$HOME/.browser-use-env/bin:$PATH
-
-
-# bun
-
-if [[ -d $HOME/.bun ]]; then
-    export BUN_INSTALL=$HOME/.bun
-    export PATH=$BUN_INSTALL/bin:$PATH
-fi
 
 
 # Android SDK
@@ -127,16 +116,6 @@ export PATH=$PATH:$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/lates
 # Project environment
 # =============================================================================
 
-# Walks up from the current directory to the project root and activates what
-# the project provides: the uv environment and the local Node binaries. Lives
-# here rather than in .zshrc so that agent sessions, which are non-interactive,
-# get the project interpreter without activating it themselves.
-#
-# The function reconciles the shell with the current directory instead of only
-# adding to it, and runs from the chpwd hook, so leaving a project deactivates
-# its environment and moving between projects switches it. chpwd is driven by
-# the cd builtin, not by the prompt, so it fires in non-interactive shells too.
-
 autoload -Uz add-zsh-hook
 
 typeset -ga ZSH_PROJECT_ROOTS=(
@@ -149,13 +128,12 @@ typeset -ga ZSH_PROJECT_ROOTS=(
 
 function zsh_project_env() {
     local root dir venv_name
-    local target_venv= target_bin=
+    local target_venv=
+    local target_bin=
 
     venv_name=${UV_PROJECT_ENVIRONMENT:-.venv}
 
     for root in $ZSH_PROJECT_ROOTS; do
-        # String match before any stat: this runs on every cd, and one of the
-        # roots lives on an external disk
         [[ $PWD == $root/* ]] || continue
 
         dir=$PWD
@@ -176,8 +154,6 @@ function zsh_project_env() {
         break
     done
 
-    # The uv environment first: `deactivate` restores the PATH captured when
-    # the environment was activated, which would undo a Node change made here.
     if [[ $VIRTUAL_ENV != $target_venv ]]; then
         if [[ -n $VIRTUAL_ENV ]]; then
             if (( $+functions[deactivate] )); then
@@ -214,10 +190,6 @@ add-zsh-hook chpwd zsh_project_env
 # PATH sorter
 # =============================================================================
 
-# Called at the end of this file, and again from .zprofile, because macOS
-# /etc/zprofile runs path_helper after .zshenv and moves the system directories
-# back to the front.
-
 function zsh_sort_path() {
     # -g because a function-local `path` would shadow the global one and empty PATH
     typeset -gaU path
@@ -225,14 +197,14 @@ function zsh_sort_path() {
     local pat
     current_path=($path)
 
-    # The project environment outranks everything, including $HOME/.local/bin,
-    # because it may sit above the current directory and would otherwise lose
-    # to the user-wide interpreter.
     priority=(
         "${VIRTUAL_ENV:-/nonexistent}/bin"
         "${ZSH_PROJECT_BIN:-/nonexistent}"
         "$PWD/.*/**"
         "$PWD/**"
+    )
+
+    priority+=(
         "$HOME/.local/bin"
         "$HOME/.*/**"
         "$HOME/**"
