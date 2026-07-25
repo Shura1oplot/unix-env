@@ -131,6 +131,13 @@ export PATH=$PATH:$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/lates
 # the project provides: the uv environment and the local Node binaries. Lives
 # here rather than in .zshrc so that agent sessions, which are non-interactive,
 # get the project interpreter without activating it themselves.
+#
+# The function reconciles the shell with the current directory instead of only
+# adding to it, and runs from the chpwd hook, so leaving a project deactivates
+# its environment and moving between projects switches it. chpwd is driven by
+# the cd builtin, not by the prompt, so it fires in non-interactive shells too.
+
+autoload -Uz add-zsh-hook
 
 typeset -ga ZSH_PROJECT_ROOTS=(
     "$HOME/Documents/GitHub"
@@ -141,42 +148,66 @@ typeset -ga ZSH_PROJECT_ROOTS=(
 )
 
 function zsh_project_env() {
-    local root dir venv
+    local root dir venv_name
+    local target_venv= target_bin=
 
-    venv=${UV_PROJECT_ENVIRONMENT:-.venv}
+    venv_name=${UV_PROJECT_ENVIRONMENT:-.venv}
 
     for root in $ZSH_PROJECT_ROOTS; do
-        [[ -d $root && $PWD == $root/* ]] || continue
+        # String match before any stat: this runs on every cd, and one of the
+        # roots lives on an external disk
+        [[ $PWD == $root/* ]] || continue
 
         dir=$PWD
 
         while [[ $dir != $root ]]; do
-            if [[ -z $VIRTUAL_ENV && -f $dir/$venv/bin/activate ]]; then
-                # shellcheck disable=SC1091
-                source "$dir/$venv/bin/activate"
-                break
-            fi
+            [[ -z $target_venv && -f $dir/$venv_name/bin/activate ]] \
+                && target_venv=$dir/$venv_name
 
-            dir=${dir:h}
-        done
+            [[ -z $target_bin && -d $dir/node_modules/.bin ]] \
+                && target_bin=$dir/node_modules/.bin
 
-        dir=$PWD
-
-        while [[ $dir != $root ]]; do
-            if [[ -d $dir/node_modules/.bin ]]; then
-                typeset -g ZSH_PROJECT_BIN=$dir/node_modules/.bin
-                export PATH=$ZSH_PROJECT_BIN:$PATH
-                break
-            fi
+            [[ -n $target_venv && -n $target_bin ]] \
+                && break
 
             dir=${dir:h}
         done
 
         break
     done
+
+    # The uv environment first: `deactivate` restores the PATH captured when
+    # the environment was activated, which would undo a Node change made here.
+    if [[ $VIRTUAL_ENV != $target_venv ]]; then
+        if [[ -n $VIRTUAL_ENV ]]; then
+            if (( $+functions[deactivate] )); then
+                deactivate
+            else
+                # VIRTUAL_ENV was inherited, so the environment has no
+                # `deactivate` function in this shell
+                path=(${path:#$VIRTUAL_ENV/bin})
+                unset VIRTUAL_ENV
+            fi
+        fi
+
+        # shellcheck disable=SC1091
+        [[ -n $target_venv ]] \
+            && source "$target_venv/bin/activate"
+    fi
+
+    [[ -n $ZSH_PROJECT_BIN && $ZSH_PROJECT_BIN != $target_bin ]] \
+        && path=(${path:#$ZSH_PROJECT_BIN})
+
+    typeset -g ZSH_PROJECT_BIN=$target_bin
+
+    [[ -n $target_bin && ${path[(Ie)$target_bin]} -eq 0 ]] \
+        && path=($target_bin $path)
+
+    return 0
 }
 
 zsh_project_env
+add-zsh-hook chpwd zsh_project_env
 
 
 # =============================================================================
