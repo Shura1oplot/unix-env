@@ -127,10 +127,7 @@ alias sshl='ssh -L localhost:8000:localhost:8000'
 
 # =============================================================================
 
-# Node.js
-#
-# Globally installed Node CLIs are already on PATH through the fnm default
-# alias, which .zshenv adds. This block only enables per-shell `fnm use`.
+# fnm, Node.js
 
 NODE_VERSION=24
 
@@ -184,9 +181,6 @@ command -v direnv &>/dev/null \
 # =============================================================================
 # PATH sorter
 # =============================================================================
-
-# Defined in .zshenv, which also activates the project environment. Rerun here
-# because the blocks above add to PATH.
 
 (( $+functions[zsh_sort_path] )) \
     && zsh_sort_path
