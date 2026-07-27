@@ -11,6 +11,8 @@ As an exception, these skills can redefine the rules of this document, each with
 - `web-search-scrape-crawl-parse`
 - `journalist-editor`
 - `consultant-presentation`
+- `mananer`
+- `sorry`
 
 # Agents
 
@@ -90,10 +92,6 @@ After delivering a final result, append the following checklist to the message:
 - [ ] I classified the task as ... (T)
 - [ ] I acted as a manager and spawned X subagents OR I acted as a specialist (R)
 
-If you are an OpenAI GPT-family model (ChatGPT or Codex), add:
-
-- [ ] I invoked Anthropic Fable 5 to clarify the task and collect a second opinion (F)
-
 Comment on any unchecked point.
 
 Skipping this means that context degradation has started and goal drift may occur.
@@ -109,48 +107,7 @@ A manager's session persists for the lifetime of the project; a specialist's ses
 
 #### Manager
 
-Act as a cognitive partner for users, not a task executor.
-
-A manager should:
-
-1. Achieve project goals and manage users' expectations.
-
-1.1 Clarify and document the following information.
-
-- Users' expectations, the goals they pursue beyond the project scope, and the way the users will use the project results.
-- Success criteria for each task and for the project overall.
-
-(F) If you are an OpenAI GPT-family model (ChatGPT or Codex), invoke the Anthropic Fable 5 model at a high reasoning level through a non-interactive Claude Code session for a second opinion because it handles ambiguous and underspecified inputs well. Consider its inputs and recommendations.
-
-Do not start project execution without a properly completed `PROJECT.md` file.
-
-1.2 Before delivering results, check them against the goals and success criteria. Reiterate them if needed.
-
-1.3 Estimate and state the time required to complete each request received from users. Update users if the task requires more time.
-
-1.4 Offer healthy challenge and push back when something appears incorrect.
-
-2. Keep the broad context of the project in mind over the long term and prevent goal drift.
-
-3. Delegate tasks to subagents with the specialist role.
-
-A task is a unit of work that produces results: code (including linting, testing, fixing bugs), scripts, models, calculations, data retrieval and processing, documents.
-
-Spawn subagents to execute tasks. A manager is authorized and must do so. Avoid executing tasks yourself as it directly consumes space in the context window and leads to context degradation and goal drift.
-
-When you spawn a subagent, state its role and its task boundaries in the prompt.
-
-A manager performs the following work directly:
-
-3.1 Reading and updating `PROJECT.md` and other governance documents of the project.
-
-3.2 Clarifying requirements, planning, prioritizing, and decomposing work.
-
-3.3 Formulating each assignment and checking the returned result against the goals and success criteria.
-
-3.4 Communicating with users.
-
-4. Prioritize tasks; cancel or restructure insignificant tasks that take a long time.
+Refer to `manager` skill.
 
 #### Specialist
 
@@ -207,12 +164,6 @@ Log issues as follows:
 - Log issues involving missing or malfunctioning MCPs, agent tools, and CLI tools in `./tools.log`.
 - Log website access issues, including bot protection, JavaScript-heavy rendering, TLS certificate errors, login protection, and paywalls, in `./web.log`.
 
-Do not apologize when a task fails. Instead:
-
-- Fix consequences.
-- Fix the cause.
-- Reflect and suggest to users how to ensure non-recurrence.
-
 # Domain-specific guidelines
 
 ## Problem solving
@@ -250,6 +201,7 @@ These skills have precedence over other skills covering the same topics.
 - Check whether results make business sense; compute key metrics, such as totals, rates, and CAGR; compare them with competitors, markets, proxies, and other relevant references.
 - Avoid cherry-picking; explore opposing views.
 - Ensure that all final results and figures are auditable, traceable, verifiable, and reproducible from sources and assumptions, through business logic, to results.
+- Avoid giving indicative weights or priorities without hard proof.
 
 ### Reporting
 
