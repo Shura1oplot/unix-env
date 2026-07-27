@@ -34,9 +34,29 @@ if command -v uv &>/dev/null; then
 fi
 
 if command -v fnm &>/dev/null; then
+    mkdir -p "$THIS_SCRIPT_DIR/tmp"
+
+    set +eo pipefail
+
+    npm ls --global --depth=0 --json 2>/dev/null \
+        | jq -r '.dependencies // {} | keys[] | select(. != "npm" and . != "corepack")' \
+        > "$THIS_SCRIPT_DIR/tmp/npm.list"
+
+    set -eo pipefail
+
     fnm install "$NODE_VERSION"
+    fnm default "$NODE_VERSION"
     fnm use "$NODE_VERSION"
+
+    npm_list=$(cat "$THIS_SCRIPT_DIR/tmp/npm.list")
+
+    if [[ -n $npm_list ]]; then
+        # shellcheck disable=SC2086
+        npm install --global $npm_list
+    fi
 fi
+
+unset npm_list
 
 command -v npm &>/dev/null \
     && npm update -g
