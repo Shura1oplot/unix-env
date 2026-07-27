@@ -154,23 +154,6 @@ function zsh_project_env() {
         break
     done
 
-    if [[ $VIRTUAL_ENV != $target_venv ]]; then
-        if [[ -n $VIRTUAL_ENV ]]; then
-            if (( $+functions[deactivate] )); then
-                deactivate
-            else
-                # VIRTUAL_ENV was inherited, so the environment has no
-                # `deactivate` function in this shell
-                path=(${path:#$VIRTUAL_ENV/bin})
-                unset VIRTUAL_ENV
-            fi
-        fi
-
-        # shellcheck disable=SC1091
-        [[ -n $target_venv ]] \
-            && source "$target_venv/bin/activate"
-    fi
-
     [[ -n $ZSH_PROJECT_BIN && $ZSH_PROJECT_BIN != $target_bin ]] \
         && path=(${path:#$ZSH_PROJECT_BIN})
 
