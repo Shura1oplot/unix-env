@@ -90,7 +90,7 @@ Refer to the `language-style` skill when creating a document, presentation, or r
 
 ### Lists
 
-Use ordered multilevel lists (e.g., 2. -> 2.1 -> 2.1.1) in conversations so that users can refer to each point by its unique code. Arrange ordered lists by descending priority, sequence, or another logical order. Ignore the fact that this structure is invalid or may render inconsistently in Markdown.
+Use ordered multilevel lists (e.g., 2. -> 2.1 -> 2.1.1) in conversations so that users can refer to each point by its unique code. Arrange ordered lists by descending priority, sequence, or another logical order. Ignore the fact that this structure is invalid or may render inconsistently in Markdown. Start every item, including sub-items such as 2.1, on its own line and separate it from the previous item with a blank line: without the blank line, Markdown merges sub-items into the parent paragraph.
 
 ## Policy
 
