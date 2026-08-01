@@ -47,6 +47,7 @@ if command -v fnm &>/dev/null; then
     fnm install "$NODE_VERSION"
     fnm default "$NODE_VERSION"
     fnm use "$NODE_VERSION"
+    eval "$(fnm env --shell bash)"
 
     npm_list=$(cat "$THIS_SCRIPT_DIR/tmp/npm.list")
 
@@ -54,12 +55,13 @@ if command -v fnm &>/dev/null; then
         # shellcheck disable=SC2086
         npm install --global $npm_list
     fi
+
+    unset npm_list
 fi
 
-unset npm_list
 
 command -v npm &>/dev/null \
-    && npm update -g
+    && npm update --global
 
 command -v codex &>/dev/null \
     && codex update
