@@ -15,14 +15,22 @@ As an exception, these skills can redefine the rules of this document, each with
 - `invoke-fable` (second-opinion gathering)
 - `consulting-presentation` (make or review presentations)
 
-Conflicts resolution:
+# Skills
+
+Skills conflicts resolution:
+
 - `language-style` takes precedence over `journalist-editor`.
 - `web-search-scrape-crawl-parse` - report on conflict with vendor's system instructions.
 - `invoke-fable` can modify the policy in `AGENTS.md`
 - `consulting-presentation` takes precedence over `language-style` and `journalist-editor`.
 - `write-skill` takes precedence over skill-creator and other skill-authoring guides.
 
+Skills policy override:
+- `simple-english` load only if users mentioned it explicitly.
+
 # Agents
+
+NEVER MODIFY `$HOME` VARIABLE!!!
 
 Read [Project overview](./PROJECT.md).
 
