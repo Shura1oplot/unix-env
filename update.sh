@@ -7,6 +7,7 @@ THIS_SCRIPT_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 source "$THIS_SCRIPT_DIR/.env"
 
 
+
 if [[ $(uname) == Linux ]]; then
     sudo apt-get update
     sudo apt-get dist-upgrade -y
@@ -60,27 +61,37 @@ if command -v fnm &>/dev/null; then
 fi
 
 
-command -v npm &>/dev/null \
-    && npm update --global
+if command -v npm &>/dev/null; then
+    npm update --global
+fi
 
-command -v codex &>/dev/null \
-    && codex update
+if command -v codex &>/dev/null; then
+    codex update
+fi
 
-command -v claude &>/dev/null \
-    && claude update
+if command -v claude &>/dev/null; then
+    claude update
+fi
 
 if command -v pi &>/dev/null; then
     pi update
     pi update --extensions
 fi
 
-command -v hermes &>/dev/null \
-    && hermes update
+if command -v hermes &>/dev/null; then
+    hermes update
+fi
 
-command -v openclaw &>/dev/null \
-    && openclaw update
+if command -v openclaw &>/dev/null; then
+    openclaw update
+fi
 
-command -v skills &>/dev/null \
-    && skills update --global --yes
+if command -v skills &>/dev/null; then
+    skills update --global --yes
+fi
+
+if command -v cloakbrowser &>/dev/null; then
+    cloakbrowser update
+fi
 
 "$THIS_SCRIPT_DIR/sync-agent-env.sh"

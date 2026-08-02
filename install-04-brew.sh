@@ -3,8 +3,9 @@
 set -euo pipefail
 
 
-[[ $(id -u) == 0 ]] \
-    && touch /.dockerenv
+if [[ $(id -u) == 0 ]]; then
+    touch /.dockerenv
+fi
 
 if command -v brew >/dev/null 2>&1; then
     brew update
@@ -32,5 +33,6 @@ brew install \
     ripgrep fzf zoxide eza bat bat-extras fd duf dust procs \
     yazi sevenzip font-symbols-only-nerd-font
 
-[[ $(id -u) == 0 && -f /.dockerenv ]] \
-    && rm /.dockerenv
+if [[ $(id -u) == 0 && -f /.dockerenv ]]; then
+    rm /.dockerenv
+fi

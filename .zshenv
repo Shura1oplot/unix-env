@@ -5,12 +5,18 @@ export PATH=$HOME/.local/bin:$HOME/bin:$PATH
 export EDITOR=nvim
 
 # shellcheck disable=SC1091
-[[ -f $HOME/.cargo/env ]] \
-    && source "$HOME/.cargo/env"
+if [[ -f $HOME/.env ]]; then
+    source "$HOME/.env"
+fi
 
-[[ $OSTYPE == darwin* && -d $HOME/.orbstack ]] \
-    && export DOCKER_HOST=unix://$HOME/.orbstack/run/docker.sock
+# shellcheck disable=SC1091
+if [[ -f $HOME/.cargo/env ]]; then
+    source "$HOME/.cargo/env"
+fi
 
+if [[ $OSTYPE == darwin* && -d $HOME/.orbstack ]]; then
+    export DOCKER_HOST=unix://$HOME/.orbstack/run/docker.sock
+fi
 
 # Brew: gnubin
 
@@ -21,9 +27,9 @@ case $OSTYPE in
     linux*)  brew_path=/home/linuxbrew/.linuxbrew ;;
 esac
 
-[[ -e $brew_path/bin/brew ]] \
-    && eval "$("$brew_path/bin/brew" shellenv)"
-
+if [[ -e $brew_path/bin/brew ]]; then
+    eval "$("$brew_path/bin/brew" shellenv)"
+fi
 
 if [[ $OSTYPE == darwin* && -n $HOMEBREW_PREFIX ]]; then
     # Shadow-prefixed
@@ -60,9 +66,9 @@ unset brew_path
 
 export FNM_DIR=${FNM_DIR:-$HOME/.local/share/fnm}
 
-[[ -d $FNM_DIR/aliases/default/bin ]] \
-    && export PATH=$FNM_DIR/aliases/default/bin:$PATH
-
+if [[ -d $FNM_DIR/aliases/default/bin ]]; then
+    export PATH=$FNM_DIR/aliases/default/bin:$PATH
+fi
 
 # pnpm
 
@@ -81,16 +87,16 @@ fi
 # orbstack
 
 # shellcheck disable=SC1091
-[[ -f $HOME/.orbstack/shell/init.zsh ]] \
-    && source "$HOME/.orbstack/shell/init.zsh"
-
+if [[ -f $HOME/.orbstack/shell/init.zsh ]]; then
+    source "$HOME/.orbstack/shell/init.zsh"
+fi
 
 # acme.sh
 
 # shellcheck disable=SC1091
-[[ -f $HOME/.acme.sh/acme.sh.env ]] \
-    && source "$HOME/.acme.sh/acme.sh.env"
-
+if [[ -f $HOME/.acme.sh/acme.sh.env ]]; then
+    source "$HOME/.acme.sh/acme.sh.env"
+fi
 
 # browser-use
 
@@ -108,8 +114,9 @@ export PATH=$PATH:$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/lates
 # gcloud
 
 # shellcheck disable=SC1091
-[[ -f $HOME/.google-cloud-sdk/path.zsh.inc ]] \
-    && source "$HOME/.google-cloud-sdk/path.zsh.inc"
+if [[ -f $HOME/.google-cloud-sdk/path.zsh.inc ]]; then
+    source "$HOME/.google-cloud-sdk/path.zsh.inc"
+fi
 
 
 # =============================================================================
