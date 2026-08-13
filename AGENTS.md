@@ -142,7 +142,7 @@ Execute the task given and report to the manager.
 
 ### Tools
 
-- Use Context7 MCP or the `ctx7` CLI (`npx ctx7`), and DeepWiki MCP.
+- Use Context7 MCP or the `ctx7` CLI, and DeepWiki MCP.
 - Modify the project and its software on the host system. If you need an additional CLI tool, Python library, or Node.js module, install it as follows.
   - Install project dependencies with `uv init; uv add ...` or `npm i ...`.
   - Install global dependencies with `brew install --yes ...`. Need `go`, `rust`, `bun`, `zig`, or anything else? Install it.
