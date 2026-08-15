@@ -19,3 +19,5 @@ sudo apt-get install -y \
     git \
     build-essential \
     jq shellcheck ripgrep
+
+echo "sudo shutdown -r now"

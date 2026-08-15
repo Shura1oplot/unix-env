@@ -25,7 +25,7 @@ esac
 eval "$("$brew_home/bin/brew" shellenv)"
 
 
-brew install \
+brew install --yes \
     jq yq \
     neovim \
     uv \

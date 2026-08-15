@@ -10,5 +10,3 @@ if [[ -f /etc/gai.conf ]]; then
     echo -e "\n\nprecedence ::ffff:0:0/96  100\n" \
         | sudo tee -a /etc/gai.conf
 fi
-
-git clone https://github.com/Shura1oplot/unix-env
