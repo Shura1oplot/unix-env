@@ -11,10 +11,19 @@ source "$THIS_SCRIPT_DIR/.env"
 if [[ $(uname) == Linux ]]; then
     sudo apt-get update
     sudo apt-get dist-upgrade -y
-    sudo apt-get autoremove -y
+    sudo apt-get autoremove --purge -y
+    sudo apt-get autoclean -y
 
-    command -v snap &>/dev/null \
-        && sudo snap refresh
+    if command -v snap &>/dev/null; then
+        sudo snap refresh
+
+        snap list --all | awk '/disabled/{print $1, $3}' \
+                | while read -r snapname revision; do
+            sudo snap remove "$snapname" --revision="$revision"
+        done
+
+        sudo bash -c "rm -f /var/lib/snapd/cache/*"
+    fi
 fi
 
 if command -v brew &>/dev/null; then

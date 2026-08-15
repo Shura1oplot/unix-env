@@ -39,6 +39,7 @@ if [[ $OSTYPE == darwin* && -n $HOMEBREW_PREFIX ]]; then
     export PATH=$HOMEBREW_PREFIX/opt/grep/libexec/gnubin:$PATH
     export PATH=$HOMEBREW_PREFIX/opt/gnu-which/libexec/gnubin:$PATH
     export PATH=$HOMEBREW_PREFIX/opt/make/libexec/gnubin:$PATH
+    export PATH=$HOMEBREW_PREFIX/opt/gpatch/libexec/gnubin:$PATH
 
     # keg-only
     export PATH=$HOMEBREW_PREFIX/opt/curl/bin:$PATH
