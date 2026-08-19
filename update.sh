@@ -16,7 +16,7 @@ fi
 
 IS_BREW=true
 
-if [[ $(uname) == Linux && $(id -u) == 0 ]]; then
+if [[ $(uname) == Linux && $(id -u) != 0 ]]; then
     brew_group=$(stat -c '%G' /home/linuxbrew/.linuxbrew/Cellar)
 
     if ! id -nG | grep -qw "$brew_group"; then
