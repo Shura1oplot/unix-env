@@ -6,9 +6,25 @@ THIS_SCRIPT_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 
 source "$THIS_SCRIPT_DIR/.env"
 
+if [[ $(id -u) == 0 ]] || id -nG | grep -qw sudo; then
+    IS_SUDOER=true
+else
+    IS_SUDOER=false
+fi
 
 
-if [[ $(uname) == Linux ]]; then
+IS_BREW=true
+
+if [[ $(uname) == Linux && $(id -u) == 0 ]]; then
+    brew_group=$(stat -c '%G' /home/linuxbrew/.linuxbrew/Cellar)
+
+    if ! id -nG | grep -qw "$brew_group"; then
+        IS_BREW=false
+    fi
+fi
+
+
+if [[ $(uname) == Linux && $IS_SUDOER ]]; then
     sudo apt-get update
     sudo apt-get dist-upgrade -y
     sudo apt-get autoremove --purge -y
@@ -26,13 +42,17 @@ if [[ $(uname) == Linux ]]; then
     fi
 fi
 
-if command -v brew &>/dev/null; then
-    [[ $(id -u) == 0 ]] \
-        && touch /.dockerenv
+if command -v brew &>/dev/null && $IS_BREW; then
+    if [[ $(id -u) == 0 ]]; then
+        touch /.dockerenv
+    fi
+
     brew update
     brew upgrade --yes
-    [[ $(id -u) == 0 && -f /.dockerenv ]] \
-        && rm /.dockerenv
+
+    if [[ $(id -u) == 0 && -f /.dockerenv ]]; then
+        rm /.dockerenv
+    fi
 fi
 
 if command -v uv &>/dev/null; then
