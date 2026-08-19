@@ -6,6 +6,7 @@ THIS_SCRIPT_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 
 source "$THIS_SCRIPT_DIR/.env"
 
+
 if [[ $(id -u) == 0 ]] || id -nG | grep -qw sudo; then
     IS_SUDOER=true
 else
@@ -24,7 +25,7 @@ if [[ $(uname) == Linux && $(id -u) == 0 ]]; then
 fi
 
 
-if [[ $(uname) == Linux && $IS_SUDOER ]]; then
+if [[ $(uname) == Linux ]] && $IS_SUDOER; then
     sudo apt-get update
     sudo apt-get dist-upgrade -y
     sudo apt-get autoremove --purge -y
