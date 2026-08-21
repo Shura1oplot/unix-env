@@ -6,7 +6,7 @@ export EDITOR=nvim
 
 # shellcheck disable=SC1091
 
-set +a
+set -a
 
 if [[ -f $HOME/.env ]]; then
     source "$HOME/.env"
@@ -17,7 +17,7 @@ if [[ -f $HOME/.cargo/env ]]; then
     source "$HOME/.cargo/env"
 fi
 
-set -a
+set +a
 
 if [[ $OSTYPE == darwin* && -d $HOME/.orbstack ]]; then
     export DOCKER_HOST=unix://$HOME/.orbstack/run/docker.sock
