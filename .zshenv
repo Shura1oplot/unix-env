@@ -4,15 +4,28 @@ export PATH=$HOME/.local/bin:$HOME/bin:$PATH
 
 export EDITOR=nvim
 
-# shellcheck disable=SC1091
+set -a
+
 if [[ -f $HOME/.env ]]; then
     source "$HOME/.env"
 fi
 
-# shellcheck disable=SC1091
+if [[ -f $HOME/.local/.env ]]; then
+    # shellcheck disable=SC1091
+    source "$HOME/.local/.env"
+fi
+
+if [[ -f $HOME/.local/env ]]; then
+    # shellcheck disable=SC1091
+    source "$HOME/.local/env"
+fi
+
 if [[ -f $HOME/.cargo/env ]]; then
+    # shellcheck disable=SC1091
     source "$HOME/.cargo/env"
 fi
+
+set +a
 
 if [[ $OSTYPE == darwin* && -d $HOME/.orbstack ]]; then
     export DOCKER_HOST=unix://$HOME/.orbstack/run/docker.sock

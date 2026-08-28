@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+expression=$2
+
+case $expression in
+    "print -rn -- \$PATH")
+        printf '%s' '/usr/local/bin:/usr/bin:/bin'
+        ;;
+    "print -l -- \$ZSH_PROJECT_ROOTS")
+        printf '%s\n' '/home/tedo/projects' '/root/agents'
+        ;;
+    *)
+        printf 'unexpected expression: %s\n' "$expression" >&2
+        exit 1
+        ;;
+esac

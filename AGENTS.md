@@ -215,6 +215,7 @@ Name deliverables using `YYYY-MM-DD ... v1.md` as an example; update the date an
 ## Software development
 
 - Write small and simple scripts; avoid approaches suitable for enterprise software development.
+- Develop PoCs before full-featured solutions.
 - Prefer simplicity; follow the Unix philosophy, the KISS and the YAGNI principles.
 - Use hard cutovers without backward compatibility.
 - Prefer using existing libraries, but avoid outdated or abandoned ones.
@@ -268,6 +269,11 @@ Consider a defined sequence of attempts is not a fallback. Report which attempt 
 ##### Lint warnings
 
 - If `reportUnusedCallResult` is intended, add `_ =`.
+
+#### JavaScript, TypeScript
+
+- Prefer ts over js.
+- Use `eslint` and `prettier`.
 
 #### Shell
 
