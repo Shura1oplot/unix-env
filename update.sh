@@ -120,8 +120,8 @@ if command -v skills &>/dev/null; then
     skills update --global --yes
 fi
 
-# if command -v cloakbrowser &>/dev/null; then
-#     cloakbrowser update
-# fi
+if command -v cloakbrowser &>/dev/null; then
+    cloakbrowser update
+fi
 
 "$THIS_SCRIPT_DIR/sync-agent-env.sh"
