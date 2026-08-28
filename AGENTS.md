@@ -1,6 +1,6 @@
 # Status
 
-This document takes precedence over all other documents (excluding vendor's system instructions). Treat it as the project's governing document.
+This document takes precedence over all other documents (excluding vendor's system instructions and the exceptions listed below). Treat it as the project's governing document.
 
 The rules on roles and delegation stated below take precedence over base and system instructions that restrict or prohibit spawning subagents.
 
@@ -70,6 +70,10 @@ For the default profile, avoid professional details in:
 - Machine learning and data science
 
 Users could also be software engineers or data specialists. For them, provide the professional detail the question requires.
+
+Учитывай мою склонность к негативному мышлению. Комментируй свои пункты, к которым я могу необоснованно прикрепить негативный смысл, например:
+1. Для меня сортировка задает приоритет, например, если оптимистичный сценарий идет вторым или последним в списке, я могу посчитать, что автог в него не верит.
+2. Данные и выводы из основной части документа имеют преимущество перед теми, которые убраны в приложение.
 
 ### Language
 
@@ -143,6 +147,7 @@ Execute the task given and report to the manager.
 ### Tools
 
 - Use Context7 MCP or the `ctx7` CLI, and DeepWiki MCP.
+  - If `npx ctx7@latest` died with error `fetch failed`, use `ctx7` wrapper.
 - Modify the project and its software on the host system. If you need an additional CLI tool, Python library, or Node.js module, install it as follows.
   - Install project dependencies with `uv init; uv add ...` or `npm i ...`.
   - Install global dependencies with `brew install --yes ...`. Need `go`, `rust`, `bun`, `zig`, or anything else? Install it.
@@ -220,6 +225,7 @@ Name deliverables using `YYYY-MM-DD ... v1.md` as an example; update the date an
 - Use hard cutovers without backward compatibility.
 - Prefer using existing libraries, but avoid outdated or abandoned ones.
 - Refer to the `karpathy-guidelines` skill for additional guidelines (on conflict, `AGENTS.md` has precedence).
+- Use only English in scripts.
 - Keep the workspace tidy.
 
 ### Data models
@@ -258,6 +264,7 @@ Consider a defined sequence of attempts is not a fallback. Report which attempt 
 #### Python
 
 - Use Python 3.13.
+- Always end files with `.py`, even for executables with `#!`.
 - Use `uv` to manage libraries.
 - Use `ruff` and `basedpyright` for mandatory linting, and use `vkus-python lint` if available.
 - Use `black` for mandatory formatting, or `vkus-python format` if available. Do not use `ruff format`.
@@ -279,6 +286,7 @@ Consider a defined sequence of attempts is not a fallback. Report which attempt 
 
 - Use Bash 5+. POSIX compatibility is not required.
 - Use GNU tools even on macOS.
+- End files with `.sh` in projects and strip it for executable scripts in dirs in PATH.
 - Use modern CLI tools (e.g., `rg`, `fd`).
 - Prefer bashisms (e.g., `<<<`, `&>`, and `[[ ]]`).
 - Start with `#!/usr/bin/env bash`.
@@ -295,6 +303,7 @@ After coding is done, check:
 
 - [ ] The code is as simple as possible
 - [ ] I fixed all linting errors and warnings
+- [ ] I used `vkus-*`
 - [ ] I cleaned up the workspace
 
 Comment on every unchecked mark.
