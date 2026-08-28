@@ -18,7 +18,7 @@ zsh_bin=$(command -v zsh)
 
 # Renders a variable in a login zsh started from $HOME, with the environment
 # this script inherited discarded, so the result does not depend on the caller.
-render() {
+function render() {
     local expression=$1
 
     (
@@ -30,17 +30,17 @@ render() {
 # Writes .env.PATH and .env.VIRTUAL_ENV into a settings file, creating the file
 # when it is absent and leaving every other key untouched. Writes only when the
 # values change, so that the SessionStart hook stays quiet.
-write_settings() {
+function write_settings() {
     local file=$1 new_path=$2 venv=${3:-}
     local tmp
 
     [[ -f $file ]] || {
         mkdir -p -- "$(dirname -- "$file")"
-        echo '{}' > "$file"
+        echo '{}' >"$file"
     }
 
     if [[ $(jq -r '.env.PATH // ""' "$file") == "$new_path"
-        && $(jq -r '.env.VIRTUAL_ENV // ""' "$file") == "$venv" ]]; then
+            && $(jq -r '.env.VIRTUAL_ENV // ""' "$file") == "$venv" ]]; then
         return 0
     fi
 
@@ -48,9 +48,9 @@ write_settings() {
 
     if [[ -n $venv ]]; then
         jq --arg p "$new_path" --arg v "$venv" \
-            '.env.PATH = $p | .env.VIRTUAL_ENV = $v' "$file" > "$tmp"
+            '.env.PATH = $p | .env.VIRTUAL_ENV = $v' "$file" >"$tmp"
     else
-        jq --arg p "$new_path" '.env.PATH = $p' "$file" > "$tmp"
+        jq --arg p "$new_path" '.env.PATH = $p' "$file" >"$tmp"
     fi
 
     mv -- "$tmp" "$file"
@@ -69,17 +69,23 @@ write_settings "$user_settings" "$base_path"
 
 # The project roots are declared once, in .zshenv.
 # shellcheck disable=SC2016 # expanded by the zsh child, not by this script
+
 while read -r root; do
-    [[ -d $root ]] || continue
+    [[ -d $root ]] \
+        || continue
 
     while read -r venv; do
         if [[ $venv == */_archive/* ]]; then
             continue
         fi
 
+        project=${venv%/.venv}
+        [[ -O $project ]] \
+            || continue
+
         write_settings \
-            "${venv%/.venv}/.claude/settings.local.json" \
+            "$project/.claude/settings.local.json" \
             "$venv/bin:$base_path" \
             "$venv"
-    done < <(find "$root" -maxdepth 2 -type d -name .venv 2> /dev/null)
+    done < <(find "$root" -maxdepth 2 -type d -name .venv 2>/dev/null)
 done < <(render 'print -l -- $ZSH_PROJECT_ROOTS')
