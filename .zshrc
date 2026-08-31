@@ -137,7 +137,6 @@ command -v fnm &>/dev/null \
     && fnm use "$NODE_VERSION" &>/dev/null \
     || true
 
-
 # Ghostty
 
 if [[ $TERM_PROGRAM = ghostty || $TERM = xterm-ghostty ]]; then
@@ -145,7 +144,6 @@ if [[ $TERM_PROGRAM = ghostty || $TERM = xterm-ghostty ]]; then
         && alias mc="TERM=xterm-256color mc"
     alias ssh="TERM=xterm-256color ssh"
 fi
-
 
 # yazi
 
@@ -158,13 +156,11 @@ function y() {
     rm -f -- "$tmp"
 }
 
-
 # SDKMAN
 
 # shellcheck disable=SC1091
 [[ -s $SDKMAN_DIR/bin/sdkman-init.sh ]] \
     && source "$SDKMAN_DIR/bin/sdkman-init.sh"
-
 
 # gcloud
 
@@ -172,12 +168,10 @@ function y() {
 [[ -f $HOME/.google-cloud-sdk/completion.zsh.inc ]] \
     && source "$HOME/.google-cloud-sdk/completion.zsh.inc"
 
-
 # direnv
 
 command -v direnv &>/dev/null \
     && eval "$(direnv hook zsh)"
-
 
 # =============================================================================
 # Hints
@@ -241,13 +235,20 @@ function ps() {
     command ps "$@"
 }
 
+function remind() {
+    echo "ls -lah"
+    echo "curl -fsSL"
+    echo "ps aux"
+    echo "ss -ntlp"
+    echo "journalctl -u nginx -f"
+}
+
 # =============================================================================
 # PATH sorter
 # =============================================================================
 
 (( $+functions[zsh_sort_path] )) \
     && zsh_sort_path
-
 
 # =============================================================================
 

@@ -112,11 +112,6 @@ if [[ -f $HOME/.acme.sh/acme.sh.env ]]; then
     source "$HOME/.acme.sh/acme.sh.env"
 fi
 
-# browser-use
-
-export PATH=$HOME/.browser-use/bin:$HOME/.browser-use-env/bin:$PATH
-
-
 # Android SDK
 
 export ANDROID_HOME=$HOME/Library/Android/sdk
