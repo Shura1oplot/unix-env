@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-set -euo pipefail
-
-: "${TMUX_CALL_LOG:?TMUX_CALL_LOG is required}"
-
-printf '%s\n' "$*" >>"$TMUX_CALL_LOG"

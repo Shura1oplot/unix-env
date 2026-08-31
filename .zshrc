@@ -122,8 +122,9 @@ source "$ZSH/oh-my-zsh.sh"
 # - $ZSH_CUSTOM/aliases.zsh
 # - $ZSH_CUSTOM/macos.zsh
 # For a full list of active aliases, run `alias`.
+
 alias git-rm-ignored='git rm --cached $(git ls-files -i -c -X .gitignore)'
-alias sshl='ssh -L localhost:8000:localhost:8000'
+alias sshl='ssh -L localhost:8000:localhost:8000 -L localhost:8080:localhost:8080'
 
 # =============================================================================
 
@@ -177,6 +178,68 @@ function y() {
 command -v direnv &>/dev/null \
     && eval "$(direnv hook zsh)"
 
+
+# =============================================================================
+# Hints
+# =============================================================================
+
+unalias du df ls grep find 2>/dev/null || true
+
+function du() {
+    if [[ -t 1 ]]; then
+        echo 'Hint: use `dust` or `ncdu` instead of `du`' >&2
+    fi
+
+    command du "$@"
+}
+
+function df() {
+    if [[ -t 1 ]]; then
+        echo 'Hint: use `duf` instead of `df`' >&2
+    fi
+
+    command df "$@"
+}
+
+function ls() {
+    if [[ -t 1 ]]; then
+        echo 'Hint: use `eza` instead of `ls`' >&2
+    fi
+
+    command ls "$@"
+}
+
+function grep() {
+    if [[ -t 1 ]]; then
+        echo 'Hint: use `rg` instead of `grep`' >&2
+    fi
+
+    command grep "$@"
+}
+
+function find() {
+    if [[ -t 1 ]]; then
+        echo 'Hint: use `fd` instead of `find`' >&2
+    fi
+
+    command find "$@"
+}
+
+function cat() {
+    if [[ -t 1 ]]; then
+        echo 'Hint: use `bat` instead of `cat`' >&2
+    fi
+
+    command cat "$@"
+}
+
+function ps() {
+    if [[ -t 1 ]]; then
+        echo 'Hint: use `procs` instead of `ps`' >&2
+    fi
+
+    command ps "$@"
+}
 
 # =============================================================================
 # PATH sorter

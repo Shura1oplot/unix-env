@@ -30,7 +30,9 @@ brew install --yes \
     neovim \
     uv \
     shellcheck \
-    ripgrep fzf zoxide eza bat bat-extras fd duf dust procs \
+    ripgrep fzf zoxide eza bat bat-extras fd procs \
+    duf dust ncdu \
+    btop \
     yazi sevenzip font-symbols-only-nerd-font
 
 if [[ $(id -u) == 0 && -f /.dockerenv ]]; then
