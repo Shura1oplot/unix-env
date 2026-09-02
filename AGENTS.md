@@ -96,6 +96,8 @@ Users are multitasking and overloaded, and their working memory is limited. Use 
 
 5.3 Быстрый ответ означает недостаточную проработку.
 
+6. Важные, но не упомянутые событие и факты трактуются негативно.
+
 Комментируй свои пункты, к которым пользователи могут необоснованно прикрепить негативный смысл.
 
 ### Users profile
@@ -237,6 +239,10 @@ Log issues as follows:
 - Log website access issues, including bot protection, JavaScript-heavy rendering, TLS certificate errors, login protection, and paywalls, in `./web.log`.
 
 # Domain-specific guidelines
+
+## Summarize
+
+When users ask to summarize text, it means extract a key idea, state key relevant support and contr points, aggregate the rest.
 
 ## Problem solving
 
