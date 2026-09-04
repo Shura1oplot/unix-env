@@ -2,8 +2,9 @@
 
 set -euo pipefail
 
-THIS_SCRIPT_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
+THIS_SCRIPT_DIR=$(dirname "$(realpath "${BASH_SOURCE[0]}")")
 
+# shellcheck source=.env
 source "$THIS_SCRIPT_DIR/.env"
 
 
@@ -34,10 +35,11 @@ if [[ $(uname) == Linux ]] && $IS_SUDOER; then
     if command -v snap &>/dev/null; then
         sudo snap refresh
 
-        snap list --all | awk '/disabled/{print $1, $3}' \
-                | while read -r snapname revision; do
-            sudo snap remove "$snapname" --revision="$revision"
-        done
+        snap list --all \
+            | awk '/disabled/{print $1, $3}' \
+            | while read -r snapname revision; do
+                sudo snap remove "$snapname" --revision="$revision"
+            done
 
         sudo bash -c "rm -f /var/lib/snapd/cache/*"
     fi
@@ -57,7 +59,8 @@ if command -v brew &>/dev/null && $IS_BREW; then
 fi
 
 if command -v uv &>/dev/null; then
-    uv self update || true
+    uv self update \
+        || true
     uv python install --preview-features python-install-default \
         --default --upgrade "$PYTHON_VERSION"
     uv tool upgrade --all \
@@ -71,7 +74,7 @@ if command -v fnm &>/dev/null; then
 
     npm ls --global --depth=0 --json 2>/dev/null \
         | jq -r '.dependencies // {} | keys[] | select(. != "npm" and . != "corepack")' \
-        > "$THIS_SCRIPT_DIR/tmp/npm.list"
+            >"$THIS_SCRIPT_DIR/tmp/npm.list"
 
     set -eo pipefail
 
@@ -93,6 +96,8 @@ fi
 
 if command -v npm &>/dev/null; then
     npm update --global
+    npm update --global
+    npm rebuild --global --dangerously-allow-all-scripts
 fi
 
 if command -v codex &>/dev/null; then
