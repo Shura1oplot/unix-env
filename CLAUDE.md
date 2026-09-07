@@ -1,3 +1,5 @@
+<!-- zemlekop: users-managed -->
+
 Read `./AGENTS.md`
 
 Use `ctx7` instead of `npx ctx7@latest` as it is broken.

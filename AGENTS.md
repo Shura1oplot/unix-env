@@ -194,8 +194,8 @@ Execute the task given and report to the manager.
 - Use Context7 and DeepWiki MCP.
   - Use `ctx7`, never `npx ctx7@latest`; if unavailable or fails, use Context7 MCP.
 - Modify the project and its software on the host system. If you need an additional CLI tool, Python library, or Node.js module, install it as follows.
-  - Install project dependencies with `uv init; uv add ...` or `npm i ...`.
-  - Install global dependencies with `brew install --yes ...`. Need `go`, `rust`, `bun`, `zig`, or anything else? Install it.
+  - Install project dependencies with `uv init; uv add ...` or `npm install ...`.
+  - Install global dependencies with `brew install --yes ...`. Need `go`, `rust`, `bun`, `zig`, or anything else? Just install it.
 
 ### Tasks (T)
 
@@ -268,92 +268,75 @@ Name deliverables using `YYYY-MM-DD ... v1.md` as an example; update the date an
 
 ## Software development
 
-- Write small and simple scripts; avoid approaches suitable for enterprise software development.
+- Fetch up-to-date documentation.
 - Develop PoCs before full-featured solutions.
-- Prefer simplicity; follow the Unix philosophy, the KISS and the YAGNI principles.
-- Use hard cutovers without backward compatibility.
-- Prefer using existing libraries, but avoid outdated or abandoned ones.
-- Refer to the `karpathy-guidelines` skill for additional guidelines (on conflict, `AGENTS.md` has precedence).
-- Use only English in scripts.
+- Use only English messages and strings.
 - Keep the workspace tidy.
 
-### Data models
+### Source code categories
 
-- Start by defining data models.
-- Validate all JSON-like objects with models: `pydantic` for Python and `jq` for Bash.
+There are two categories of source files:
 
-### Before coding
+1. Agents-managed.
+2. Users-managed (marked with `# zemlekop: users-managed` or `<!-- zemlekop: users-managed -->`).
 
-- Fetch up-to-date documentation from Context7 and DeepWiki, and consult the official documentation.
-- If users asks you to implement or fix something marked with `CODEX:`, `CLAUDE:`, `FIXME:`, or `TODO:` in a file, read the file, create a checklist, complete it, and report using the checklist.
+#### Agents-managed files
 
-### After coding
+You have full autonomy to manage the agents-managed source code files. Do what you think is best.
 
-- Check that the code follows the coding guidelines and quality standards.
-- Verify that the codebase does not contain the forbidden techniques; refactor if needed.
+#### Users-managed files
 
-#### Forbidden techniques
+For the users-managed files, the less code is better as they are reviewed manually. KPI: working, efficient, clear logic, minimal code.
 
-Avoid:
+Follow the rules:
 
-- Silencing linter messages.
-- Dropping errors or warnings silently.
-- Logging an exception without re-raising it.
-- Catching broad exceptions (e.g., `except:` or `except Exception:` in Python).
-- Using type casts (e.g., `typing.cast` in Python).
+- Match existing style.
+- Prefer simplicity; follow the Unix philosophy, the KISS and the YAGNI principles.
+- Make surgical changes - only where must.
+- Write small and simple scripts; avoid techniques suitable for enterprise software development.
+- Use existing libraries and tools, but avoid outdated or abandoned ones.
+- Define and use data models; raw json manipulation is forbidden.
+- Format code using `vkus-python lint`, `vkus-python format`, `vkus-bash lint`, `vkus-bash format`.
+
+Forbidden:
+
+- Implementing features beyond what was explicitly requested.
+- Adding abstractions, flexibility or configurability for the future.
 - Substituting a default, empty, or zero value for a failed operation as a fallback.
-- Switching to another source, tool, or method silently and presenting the result as the requested one.
-- Monkey-patching.
-- Parsing HTML using regex.
 
-Consider a defined sequence of attempts is not a fallback. Report which attempt succeeded.
+Hints:
 
-### Language-specific guidelines
-
-#### Python
-
-- Use Python 3.13.
-- Always end files with `.py`, even for executables with `#!`.
-- Use `uv` to manage libraries.
-- Use `ruff` and `basedpyright` for mandatory linting, and use `vkus-python lint` if available.
-- Use `black` for mandatory formatting, or `vkus-python format` if available. Do not use `ruff format`.
-- Prefer async code to synchronous code.
 - For CLI arguments, validate `argparse.Namespace` values with `pydantic.BaseModel.model_validate` to avoid `basedpyright` typing warnings.
+- If `reportUnusedCallResult` is intended, add `_ = ...`.
 - Use `pydantic-settings` if relevant.
 - Use `tqdm` and colored logs for interactive scripts when output is sent to a TTY.
 
-##### Lint warnings
+Bash:
 
-- If `reportUnusedCallResult` is intended, add `_ =`.
-
-#### JavaScript, TypeScript
-
-- Prefer ts over js.
-- Use `eslint` and `prettier`.
-
-#### Shell
-
-- NEVER MODIFY `$HOME` ENV VARIABLE!!!
-- Use Bash 5+. POSIX compatibility is not required.
+- Use Bash 5+; POSIX compatibility is not required.
 - Use GNU tools even on macOS.
-- End files with `.sh` in projects and strip it for executable scripts in dirs in PATH.
-- Use modern CLI tools (e.g., `rg`, `fd`).
 - Prefer bashisms (e.g., `<<<`, `&>`, and `[[ ]]`).
 - Start with `#!/usr/bin/env bash`.
 - Use a global `set -euo pipefail` in scripts.
   - But avoid it in libraries loaded using `source ./lib.sh`.
   - Temporarily disable `-e` with `set +e` and `-o pipefail` for a block of code if doing so simplifies the logic.
-- Use `shellcheck` for mandatory linting, and use `vkus-bash lint` if available.
-- Use either `shfmt` or `vkus-bash format` for mandatory formatting if the latter is available.
-- Avoid long and complex `awk`, `sed`, `grep`, and `jq` queries; simplify them if possible or switch to Python.
+- Use `shellcheck` for linting.
+- Avoid long and complex `awk`, `sed`, `grep`, and `jq` queries; simplify them or switch to Python.
 
-### Checklist
+### Language-specific guidelines
 
-After coding is done, check:
+#### Python
 
-- [ ] The code is as simple as possible
-- [ ] I fixed all linting errors and warnings
-- [ ] I used `vkus-*`
-- [ ] I cleaned up the workspace
+- Python 3.13.
+- Use `uv` to manage libraries.
+- Use `ruff` and `basedpyright`.
 
-Comment on every unchecked mark.
+#### JavaScript, TypeScript
+
+- Prefer TypeScript over JavaScript.
+- Use `eslint`.
+
+#### Shell
+
+- NEVER MODIFY `$HOME` ENV VARIABLE!!!
+- End files with `.sh` in projects and strip it for executable scripts in dirs in PATH.

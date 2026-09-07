@@ -123,7 +123,7 @@ source "$ZSH/oh-my-zsh.sh"
 # - $ZSH_CUSTOM/macos.zsh
 # For a full list of active aliases, run `alias`.
 
-alias git-rm-ignored='git rm --cached $(git ls-files -i -c -X .gitignore)'
+alias git-rm-ignored='git ls-files -i -c -X .gitignore -z | xargs -0 git rm --cached --'
 alias sshl='ssh -L localhost:8000:localhost:8000 -L localhost:8080:localhost:8080'
 
 # =============================================================================
