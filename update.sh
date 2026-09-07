@@ -114,11 +114,11 @@ if command -v pi &>/dev/null; then
 fi
 
 if command -v hermes &>/dev/null; then
-    hermes update
+    hermes update || true
 fi
 
 if command -v openclaw &>/dev/null; then
-    openclaw update
+    openclaw update || true
 fi
 
 if command -v skills &>/dev/null; then

@@ -128,6 +128,11 @@ if [[ -f $HOME/.google-cloud-sdk/path.zsh.inc ]]; then
 fi
 
 
+# openclaw
+
+export PATH=$HOME/.openclaw/bin:$PATH
+
+
 # =============================================================================
 # Project environment
 # =============================================================================
