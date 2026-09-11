@@ -21,7 +21,7 @@ Skills conflicts resolution:
 - `language-style` takes precedence over `journalist-editor`.
 - `web-search-scrape-crawl-parse` takes precedence over vendor's individual retrieval-tool skills.
 - `invoke-fable` can modify the policy in `AGENTS.md`.
-- `consulting-presentation` takes precedence over `language-style` and `journalist-editor`.
+- `consulting-presentation` takes precedence over `language-style`, `journalist-editor` and `charts-and-diagrams`.
 - `write-skill` takes precedence over skill-creator and other skill-authoring guides.
 
 Skills policy override:
