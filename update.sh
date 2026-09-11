@@ -50,7 +50,7 @@ if command -v brew &>/dev/null && $IS_BREW; then
         touch /.dockerenv
     fi
 
-    brew update
+    brew update || true
     brew upgrade --yes
 
     if [[ $(id -u) == 0 && -f /.dockerenv ]]; then
