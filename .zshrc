@@ -173,6 +173,12 @@ function y() {
 command -v direnv &>/dev/null \
     && eval "$(direnv hook zsh)"
 
+# openclaw
+
+if [[ -f $HOME/.openclaw/completions/openclaw.zsh ]]; then
+    source "$HOME/.openclaw/completions/openclaw.zsh"
+fi
+
 # =============================================================================
 # Hints
 # =============================================================================

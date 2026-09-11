@@ -129,4 +129,8 @@ if command -v cloakbrowser &>/dev/null; then
     cloakbrowser update
 fi
 
+if command -v agent-browser &>/dev/null; then
+    agent-browser install
+fi
+
 "$THIS_SCRIPT_DIR/sync-agent-env.sh"
