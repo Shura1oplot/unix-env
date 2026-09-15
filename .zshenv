@@ -71,18 +71,22 @@ fi
 unset brew_path
 
 
+# rust
+
+# shellcheck disable=SC1091
+if [[ -f ${CARGO_HOME:-$HOME/.cargo}/env ]]; then
+    source "${CARGO_HOME:-$HOME/.cargo}/env"
+fi
+
+
 # Node.js
-#
-# The default alias holds every globally installed Node CLI. Its bin directory
-# goes on PATH here, so those CLIs are available in non-interactive shells
-# without calling `fnm env`, which allocates a multishell directory per call.
-# `fnm env` stays in .zshrc for interactive `fnm use` switching.
 
 export FNM_DIR=${FNM_DIR:-$HOME/.local/share/fnm}
 
 if [[ -d $FNM_DIR/aliases/default/bin ]]; then
     export PATH=$FNM_DIR/aliases/default/bin:$PATH
 fi
+
 
 # pnpm
 
@@ -104,6 +108,7 @@ fi
 if [[ -f $HOME/.orbstack/shell/init.zsh ]]; then
     source "$HOME/.orbstack/shell/init.zsh"
 fi
+
 
 # acme.sh
 
