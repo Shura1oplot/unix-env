@@ -88,9 +88,9 @@ plugins=(
     fzf zoxide eza
 )
 
-case $(uname) in
-    Darwin) plugins+=(macos sublime sublime-merge) ;;
-    Linux)
+case $OSTYPE in
+    darwin*) plugins+=(macos sublime sublime-merge) ;;
+    linux*)
         plugins+=(systemd)
 
         if [[ -f /etc/lsb-release ]]; then
@@ -114,6 +114,19 @@ zstyle ':omz:plugins:eza' 'color-scale' size
 source "$ZSH/oh-my-zsh.sh"
 
 # User configuration
+
+if [[ $HOST == lima-* ]]; then
+    PROMPT="[vm]$PROMPT"
+    parse_git_dirty() { :; }
+
+elif [[ -n $SSH_CONNECTION ]]; then
+    PROMPT="[ssh]$PROMPT"
+
+
+elif [[ $OSTYPE == darwin* ]]; then
+    PROMPT="[mac]$PROMPT"
+
+fi
 
 # Set personal aliases, overriding those provided by Oh My Zsh libs,
 # plugins, and themes. Aliases can be placed here, though Oh My Zsh

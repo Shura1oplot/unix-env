@@ -138,6 +138,11 @@ fi
 export PATH=$HOME/.openclaw/bin:$PATH
 
 
+# pi
+
+export PATH=$HOME/.local/share/fnm/node-versions/v24.21.0/installation/bin:$PATH
+
+
 # =============================================================================
 # Project environment
 # =============================================================================
