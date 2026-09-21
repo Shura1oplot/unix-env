@@ -117,12 +117,6 @@ if command -v hermes &>/dev/null; then
     hermes update || true
 fi
 
-if command -v openclaw &>/dev/null; then
-    openclaw update --yes --accept-capabilities || true
-    openclaw doctor --repair --force --yes || true
-    openclaw update repair --yes || true
-fi
-
 if command -v skills &>/dev/null; then
     skills update --global --yes
 fi
@@ -132,9 +126,26 @@ if command -v cloakbrowser &>/dev/null; then
 fi
 
 if command -v agent-browser &>/dev/null; then
-    while ! agent-browser install; do
+    agent_browser_args=
+
+    if [[ $(uname) == Linux ]]; then
+        if sudo -n yes; then
+            agent_browser_args=--with-deps
+        fi
+    fi
+
+    while ! agent-browser install $agent_browser_args; do
         :
     done
+fi
+
+if command -v openclaw &>/dev/null; then
+    openclaw update --yes --accept-capabilities || true
+    openclaw doctor --repair --force --yes || true
+    openclaw update repair --yes || true
+    openclaw plugins doctor || true
+    openclaw doctor --repair --force --yes || true
+    openclaw gateway install --force || true
 fi
 
 "$THIS_SCRIPT_DIR/sync-agent-env.sh"
