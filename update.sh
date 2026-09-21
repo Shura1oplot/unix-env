@@ -118,7 +118,9 @@ if command -v hermes &>/dev/null; then
 fi
 
 if command -v openclaw &>/dev/null; then
-    openclaw update || true
+    openclaw update --yes --accept-capabilities || true
+    openclaw doctor --repair --force --yes || true
+    openclaw update repair --yes || true
 fi
 
 if command -v skills &>/dev/null; then
@@ -136,3 +138,5 @@ if command -v agent-browser &>/dev/null; then
 fi
 
 "$THIS_SCRIPT_DIR/sync-agent-env.sh"
+
+echo "./update.sh done!"
