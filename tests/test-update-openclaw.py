@@ -18,12 +18,11 @@ class Scenario(TypedDict, total=False):
     fail: str
     packages: list[str]
     invalid_inventory: bool
-    version: str
     no_npm: bool
     no_fnm: bool
     external_prefix: bool
+    target_only: bool
     installation: str
-    symlink: bool
     expect: int
 
 
@@ -95,11 +94,7 @@ def mock(command: Path, args: list[str]) -> None:
                             }
                         }))
 
-        elif args[0] in {"prefix", "root"}:
-            print(
-                prefix if args[0] == "prefix" else prefix / "lib/node_modules")
-
-        elif args[0] in {"install", "update", "rebuild"}:
+        elif args[0] in {"install", "rebuild"}:
             names = [
                 arg.rsplit("@", 1)[0] if "@" in arg[1:] else arg
                 for arg in args[1:]
@@ -113,20 +108,20 @@ def mock(command: Path, args: list[str]) -> None:
             if "openclaw" in packages:
                 make_tool(prefix / "bin/openclaw")
 
+        elif args == ["cache", "clean", "--force"]:
+            pass
+
         else:
             raise AssertionError(args)
 
     elif name == "openclaw":
-        if args[:2] == ["gateway", "status"] and "--json" in args:
-            print(
-                json.dumps(
-                    {"cli": {"version": scenario.get("version", "2026.9.5")}}))
-
-    elif name == "rm":
-        paths = [Path(arg) for arg in args if not arg.startswith("-")]
-        assert len(paths) == 1 and paths[0].is_relative_to(fixture), paths
-        assert paths[0].name == "openclaw", paths
-        paths[0].unlink()
+        assert args[:2] in (
+            ["gateway", "stop"],
+            ["gateway", "start"],
+            ["gateway", "install"],
+            ["gateway", "status"],
+            ["doctor", "--fix"],
+            ["update", "--yes"]), args
 
     else:
         raise AssertionError((name, args))
@@ -146,17 +141,12 @@ def extract_blocks(source: str) -> str:
     selected: set[int] = set()
     starts = (
         "if command -v fnm &>/dev/null; then",
-        "if command -v npm &>/dev/null; then",
-        "if [[ -n $openclaw_command ]]; then")
-    preamble_start = next(
+        "if command -v openclaw &>/dev/null; then",
+        "if $openclaw_installed; then")
+    selected.update(
         i
         for i, line in enumerate(lines)
-        if line.rstrip() == "openclaw_command=")
-    preamble_end = next(
-        i
-        for i, line in enumerate(lines)
-        if line.startswith("if [[ $(id -u) == 0 ]]"))
-    selected.update(range(preamble_start, preamble_end))
+        if line.rstrip() in {"fnm_node=", "openclaw_installed=false"})
 
     for begin, line in enumerate(lines):
         if line.rstrip() not in starts:
@@ -188,7 +178,6 @@ def run_case(name: str,
             assert executable, f"Required test dependency missing: {tool}"
             (bin_dir / tool).symlink_to(executable)
 
-        make_tool(bin_dir / "rm")
         old_prefix = fixture / "old node" / "installation"
         new_prefix = fixture / "new node" / "installation"
         private_prefix = fixture / "private prefix"
@@ -207,7 +196,7 @@ def run_case(name: str,
 
         if not scenario.get("no_fnm"):
             make_tool(bin_dir / "fnm")
-        installation = scenario.get("installation", "private")
+        installation = scenario.get("installation", "old")
         initial_prefix = new_prefix if installation == "current" else old_prefix
         packages = scenario.get("packages",
                                 ["npm", "corepack", "alpha", "@scope/beta"])
@@ -228,9 +217,9 @@ def run_case(name: str,
             }[installation]
             make_tool(prefix / "bin/openclaw")
 
-            if scenario.get("symlink"):
-                (bin_dir / "openclaw").symlink_to(
-                    os.path.relpath(prefix / "bin/openclaw", bin_dir))
+        if scenario.get("target_only"):
+            make_tool(new_prefix / "bin/openclaw")
+
         env = os.environ.copy()
         _ = env.pop("NPM_CONFIG_PREFIX", None)
         _ = env.pop("npm_config_prefix", None)
@@ -311,16 +300,16 @@ def run_case(name: str,
                     ), (name, "Wrong npm target prefix", call)
 
         if installation != "absent":
-            original = (
-                bin_dir / "openclaw"
-                if scenario.get("symlink")
-                else prefix / "bin/openclaw")
-            migrated = any(call["tool"] == "rm" for call in calls)
-            assert original.exists() != migrated, (
+            assert (prefix / "bin/openclaw").exists(), (
                 name,
-                "Incorrect original launcher retention")
+                "Existing launcher must not be deleted")
 
         commands = command_list(calls)
+
+        if installation == "absent":
+            assert not any(call["tool"] == "openclaw" for call in calls), (
+                name,
+                "Do not activate a target-only installation")
 
         if expected == 0 and installation != "absent":
             health = commands.index("openclaw gateway status --require-rpc")
@@ -335,9 +324,6 @@ def run_case(name: str,
                 commands)
 
             for i, call in enumerate(calls):
-                if call["tool"] == "rm":
-                    assert health < i, (name, commands)
-
                 if call["tool"] == "openclaw" and call["args"][:2] == [
                         "gateway",
                         "install"]:
@@ -366,9 +352,15 @@ def run_case(name: str,
                     for call in calls), (name, commands)
                 assert (new_prefix / "bin/openclaw").exists(), name
 
-        if expected != 0:
-            assert not any(call["tool"] == "rm" for call in calls), (name,
-                                                                     commands)
+                for call in calls:
+                    if call["tool"] == "openclaw" and call["args"][:2] != [
+                            "gateway",
+                            "stop"]:
+                        assert call["path"] == str(
+                            multishell_bin / "openclaw"), (
+                            name,
+                            "OpenClaw must resolve through the new fnm PATH",
+                            call)
         print(f"PASS {name}")
 
         return result.returncode, calls, output
@@ -379,66 +371,47 @@ def command_list(calls: list[Call]) -> list[str]:
 
 
 def main() -> None:
-    _, calls, _ = run_case("private wrapper migration")
+    _, calls, _ = run_case("old fnm installation migration")
     commands = command_list(calls)
     assert next(
         i for i, command in enumerate(commands) if command.startswith("npm ls ")
     ) < commands.index("fnm env --shell bash")
-    assert any(
-        call["tool"] == "npm"
-        and call["args"]
-        == [
-            "install",
-            "--global",
-            "openclaw",
-            "--dangerously-allow-all-scripts",
-            "--engine-strict"]
-        for call in calls), calls
 
-    for call in calls:
-        if call["tool"] == "openclaw" and call["args"][0] in {
-            "doctor",
-            "update",
-        }:
-            assert "/new node/installation/" in call["path"], call
-
-    _ = run_case("relative symlink launcher", symlink=True)
-    _, calls, _ = run_case("private beta follows common npm policy",
-                           version="2026.9.6-beta.1")
-    assert not any(
-        "openclaw@2026.9.6-beta.1" in call["args"] for call in calls), calls
-
-    _, calls, _ = run_case("old fnm installation migration", installation="old")
-
-    for operation in ("install", "update", "rebuild"):
+    for operation in ("install", "rebuild"):
         assert any(
             call["tool"] == "npm"
             and call["args"][0] == operation
             and {"openclaw", "alpha", "@scope/beta"}.issubset(call["args"])
             for call in calls), (operation, calls)
 
-    _, calls, _ = run_case("current fnm installation", installation="current")
-    assert not any(call["tool"] == "rm" for call in calls), calls
+    _ = run_case("current fnm installation", installation="current")
     _ = run_case("external npm prefix",
                  installation="old",
                  external_prefix=True)
-    _ = run_case("private wrapper with external npm prefix",
-                 external_prefix=True)
+    _, calls, output = run_case("standalone installation requires migration",
+                                installation="private",
+                                expect=1)
+    assert "Install OpenClaw under fnm" in output, output
+    assert not any(
+        call["tool"] == "openclaw" and call["args"][0] == "doctor"
+        for call in calls), calls
     _ = run_case("missing OpenClaw", installation="absent")
+    _ = run_case("OpenClaw exists only in target Node",
+                 installation="absent",
+                 target_only=True)
     _ = run_case("missing npm before fnm", no_npm=True, installation="absent")
-    _ = run_case("private wrapper without npm before fnm", no_npm=True)
-    _ = run_case("missing fnm and npm", no_fnm=True, no_npm=True)
-    _, calls, _ = run_case("no fnm private official updater", no_fnm=True)
+    _ = run_case("missing fnm and npm",
+                 no_fnm=True,
+                 no_npm=True,
+                 installation="private")
+    _, calls, _ = run_case("no fnm private official updater",
+                           no_fnm=True,
+                           installation="private")
     commands = command_list(calls)
     assert commands.index(
         "openclaw update --yes --accept-capabilities --no-restart"
     ) < commands.index("openclaw gateway start"), commands
-    _, calls, _ = run_case("no fnm npm-managed installation",
-                           no_fnm=True,
-                           installation="old")
-    assert not any(
-        call["tool"] == "openclaw" and call["args"][0] == "update"
-        for call in calls), calls
+    _ = run_case("no fnm npm-managed installation", no_fnm=True)
     _ = run_case("no fnm no OpenClaw", no_fnm=True, installation="absent")
     _ = run_case("empty npm inventory", packages=[], installation="absent")
     _ = run_case("OpenClaw-only npm inventory",
@@ -469,28 +442,18 @@ def main() -> None:
     for failure in (
             "openclaw gateway stop",
             "npm install --global",
-            "npm update --global",
             "npm rebuild --global",
+            "npm cache clean",
             "openclaw doctor",
             "openclaw gateway install",
             "openclaw gateway status --require-rpc"):
         _, calls, _ = run_case(f"failure: {failure}", fail=failure, expect=47)
-
-    _ = run_case("failure: private install",
-                 fail="npm install --global openclaw",
-                 packages=[],
-                 expect=47)
 
     for failure in ("openclaw update", "openclaw gateway start"):
         _ = run_case(f"failure without fnm: {failure}",
                      fail=failure,
                      no_fnm=True,
                      expect=47)
-
-    _ = run_case("failure: no-fnm npm prefix",
-                 fail="npm prefix",
-                 no_fnm=True,
-                 expect=47)
 
     print(
         "All offline OpenClaw updater tests passed; no real package or service operations ran."

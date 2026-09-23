@@ -1,17 +1,8 @@
 #!/usr/bin/env bash
 
 # zemlekop: users-managed
+
 set -euo pipefail
-
-IS_BREW=true
-
-if [[ $(uname) == Linux && $(id -u) != 0 ]]; then
-    brew_group=$(stat -c '%G' /home/linuxbrew/.linuxbrew/Cellar)
-
-    if ! id -nG | grep -qw "$brew_group"; then
-        IS_BREW=false
-    fi
-fi
 
 declare -A latest=() python_remove=()
 
@@ -19,20 +10,37 @@ node_remove=()
 python_inventory=$(uv python list --only-installed --managed-python --color never | sort -Vr)
 node_inventory=$(FNM_LOGLEVEL=info NO_COLOR=1 fnm list | sort -Vr)
 
+# Inventories are newest first; retain the first version in each group.
+
 while read -r key _; do
-    [[ $key =~ ^cpython-(3\.[0-9]+)\.[0-9]+(\+[^-]+)?-(.+)$ ]] \
+    IFS=- read -r implementation version platform <<<"$key"
+    IFS=+ read -r version variant <<<"$version"
+    IFS=. read -r major minor patch <<<"$version"
+    [[ $implementation == cpython && $major == 3 ]] \
         || continue
-    group=${BASH_REMATCH[1]}${BASH_REMATCH[2]}-${BASH_REMATCH[3]}
+
+    case $minor$patch in
+        *[!0-9]*) continue ;;
+    esac
+
+    group=python-$major.$minor-$variant-$platform
     latest[$group]=${latest[$group]:-$key}
     [[ $key != "${latest[$group]}" ]] \
         || continue
     python_remove[$key]=1
 done <<<"$python_inventory"
 
+
 while read -r marker key _; do
-    [[ $marker == '*' && $key =~ ^v([0-9]+)\.[0-9]+\.[0-9]+$ ]] \
+    IFS=. read -r major minor patch <<<"${key#v}"
+    [[ $marker == '*' && $key == v* ]] \
         || continue
-    group=node${BASH_REMATCH[1]}
+
+    case $major$minor$patch in
+        *[!0-9]*) continue ;;
+    esac
+
+    group=node-$major
     latest[$group]=${latest[$group]:-$key}
     [[ $key != "${latest[$group]}" ]] \
         || continue
