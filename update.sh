@@ -99,10 +99,22 @@ fi
 
 if command -v codex &>/dev/null; then
     codex update
+
+    find "$HOME/.codex/packages/standalone/releases" -mindepth 1 -maxdepth 1 -type d \
+        ! -samefile "$(realpath "$HOME/.codex/packages/standalone/current")" \
+        -exec rm -rf -- {} +
 fi
 
 if command -v claude &>/dev/null; then
     claude update
+
+    claude_current=$(realpath -e "$HOME/.local/bin/claude")
+
+    for claude_version in "$HOME/.local/share/claude/versions/"*; do
+        [[ -f $claude_version && ! -L $claude_version && ! $claude_version -ef $claude_current ]] \
+            || continue
+        rm -f -- "$claude_version"
+    done
 fi
 
 if command -v pi &>/dev/null; then
