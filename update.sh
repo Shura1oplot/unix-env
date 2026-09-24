@@ -90,8 +90,12 @@ if command -v fnm &>/dev/null; then
         mapfile -t npm_list <<<"$npm_packages"
         npm install --global "${npm_list[@]}"
         npm rebuild --global --dangerously-allow-all-scripts "${npm_list[@]}"
-        npm cache clean --force
     fi
+
+    npm update --global
+    npm update --global
+    npm rebuild --global --dangerously-allow-all-scripts
+    npm cache clean --force
 
     unset npm_packages npm_list fnm_env
 fi
