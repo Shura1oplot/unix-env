@@ -101,6 +101,10 @@ if command -v fnm &>/dev/null; then
 fi
 
 
+rustup default stable
+rustup update
+
+
 if command -v codex &>/dev/null; then
     codex update
 
