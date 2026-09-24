@@ -113,6 +113,11 @@ zstyle ':omz:plugins:eza' 'color-scale' size
 # shellcheck disable=SC1091
 source "$ZSH/oh-my-zsh.sh"
 
+# Keep stt available for speech-to-text instead of the Sublime Text alias.
+if [[ $OSTYPE == darwin* && ${aliases[stt]-} == 'subl .' ]]; then
+    unalias stt
+fi
+
 # User configuration
 
 if [[ $HOST == lima-* ]]; then

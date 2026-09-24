@@ -134,9 +134,11 @@ if command -v openclaw &>/dev/null; then
     openclaw update repair --yes || true
     OPENCLAW_SERVICE_REPAIR_POLICY=external \
         openclaw doctor --fix --force --non-interactive || true
-    openclaw gateway install --force
-    openclaw gateway start
-    openclaw gateway status --require-rpc --deep
+    openclaw gateway install --force || true
+    openclaw gateway start || true
+    sleep 10
+    openclaw gateway status --require-rpc --deep || true
+    openclaw gateway status --require-rpc || true
 
     if command -v systemctl &>/dev/null; then
         systemctl --user daemon-reload
