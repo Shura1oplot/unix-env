@@ -6,7 +6,6 @@ set -euo pipefail
 
 THIS_SCRIPT_DIR=$(dirname "$(realpath "${BASH_SOURCE[0]}")")
 
-# shellcheck source=.env
 source "$THIS_SCRIPT_DIR/.env"
 
 
@@ -49,21 +48,18 @@ if [[ $(uname) == Linux ]] && $IS_SUDOER; then
 fi
 
 if command -v brew &>/dev/null && $IS_BREW; then
-    if [[ $(id -u) == 0 ]]; then
-        touch /.dockerenv
-    fi
-
-    brew update || true
+    brew update
     brew upgrade --yes
     brew cleanup
-
-    if [[ $(id -u) == 0 && -f /.dockerenv ]]; then
-        rm /.dockerenv
-    fi
 fi
 
 if command -v uv &>/dev/null; then
-    uv self update || true
+    if brew list uv &>/dev/null; then
+        brew uninstall --yes uv
+        curl -LsSf https://astral.sh/uv/install.sh | sh
+    fi
+
+    uv self update
     uv python install --preview-features python-install-default \
         --default --upgrade "$PYTHON_VERSION"
     uv tool upgrade --all \
@@ -160,7 +156,9 @@ if command -v skills &>/dev/null; then
 fi
 
 if command -v cloakbrowser &>/dev/null; then
-    cloakbrowser update
+    if [[ -n ${CLOAKBROWSER_LICENSE_KEY:-} ]]; then
+        cloakbrowser update
+    fi
 fi
 
 if command -v agent-browser &>/dev/null; then

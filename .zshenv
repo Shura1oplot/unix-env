@@ -1,10 +1,17 @@
 # .zshenv is always sourced: interactive, non-interactive, login, and agent shells.
 
+# zemlekop: users-managed
+
 export PATH=$HOME/.local/bin:$HOME/bin:$PATH
 
 export EDITOR=nvim
 
 set -a
+
+if [[ -f $HOME/.cargo/env ]]; then
+    # shellcheck disable=SC1091
+    source "$HOME/.cargo/env"
+fi
 
 if [[ -f $HOME/.env ]]; then
     source "$HOME/.env"
@@ -20,18 +27,13 @@ if [[ -f $HOME/.local/env ]]; then
     source "$HOME/.local/env"
 fi
 
-if [[ -f $HOME/.cargo/env ]]; then
-    # shellcheck disable=SC1091
-    source "$HOME/.cargo/env"
-fi
-
 set +a
+
 
 if [[ $OSTYPE == darwin* && -d $HOME/.orbstack ]]; then
     export DOCKER_HOST=unix://$HOME/.orbstack/run/docker.sock
 fi
 
-# Brew: gnubin
 
 brew_path=
 
@@ -45,30 +47,50 @@ if [[ -e $brew_path/bin/brew ]]; then
 fi
 
 if [[ $OSTYPE == darwin* && -n $HOMEBREW_PREFIX ]]; then
-    # Shadow-prefixed
-    export PATH=$HOMEBREW_PREFIX/opt/coreutils/libexec/gnubin:$PATH
-    export PATH=$HOMEBREW_PREFIX/opt/findutils/libexec/gnubin:$PATH
-    export PATH=$HOMEBREW_PREFIX/opt/gnu-sed/libexec/gnubin:$PATH
-    export PATH=$HOMEBREW_PREFIX/opt/grep/libexec/gnubin:$PATH
-    export PATH=$HOMEBREW_PREFIX/opt/gnu-which/libexec/gnubin:$PATH
-    export PATH=$HOMEBREW_PREFIX/opt/make/libexec/gnubin:$PATH
-    export PATH=$HOMEBREW_PREFIX/opt/gpatch/libexec/gnubin:$PATH
 
-    # keg-only
-    export PATH=$HOMEBREW_PREFIX/opt/curl/bin:$PATH
-    export PATH=$HOMEBREW_PREFIX/opt/gnu-getopt/bin:$PATH
-fi
-
-# How to find:
-# brew info --installed --json=v1 | jq -r '.[] | select(.keg_only == true) | .name'
-# brew info --installed --json=v1 | jq -r '.[] | select(.keg_only == true) | "\(.name): \(.keg_only_reason.reason)"'
 # brew info --installed --json=v1 | jq -r '
 #   .[] | select(
-#     .keg_only == true or
+#     .keg_only == false and
 #     (.caveats != null and (.caveats | contains("gnubin") or contains("libexec")))
 #   ) | .name'
 
-unset brew_path
+    brew_shadow_prefixes=(
+        coreutils
+        findutils
+        gnu-sed
+        gnu-tar
+        gnu-which
+        gpatch
+        grep
+        libtool
+        make
+    )
+
+    # brew info --installed --json=v1 | jq -r '.[] | select(.keg_only == true) | "\(.name): \(.keg_only_reason.reason)"'
+    # brew info --installed --json=v1 | jq -r '.[] | select(.keg_only == true and .keg_only_reason.reason == ":provided_by_macos") | .name'
+    brew_keg_only=(
+        curl
+        libarchive
+        m4
+        ncurses
+        sqlite
+        unzip
+        zip
+        zlib
+        ffmpeg-full
+        imagemagick-full
+    )
+
+    for pkg in $brew_shadow_prefixes; do
+        path=("$HOMEBREW_PREFIX/opt/$pkg/libexec/gnubin" $path)
+    done
+
+    for pkg in $brew_keg_only; do
+        path=("$HOMEBREW_PREFIX/opt/$pkg/bin" $path)
+    done
+fi
+
+unset brew_path brew_shadow_prefixes brew_keg_only
 
 
 # rust
@@ -105,9 +127,7 @@ fi
 # orbstack
 
 # shellcheck disable=SC1091
-if [[ -f $HOME/.orbstack/shell/init.zsh ]]; then
-    source "$HOME/.orbstack/shell/init.zsh"
-fi
+export PATH=$HOME/.orbstack/bin:$PATH
 
 
 # acme.sh
@@ -138,11 +158,6 @@ fi
 export PATH=$HOME/.openclaw/bin:$PATH
 
 
-# pi
-
-export PATH=$HOME/.local/share/fnm/node-versions/v24.21.0/installation/bin:$PATH
-
-
 # =============================================================================
 # Project environment
 # =============================================================================
@@ -152,9 +167,8 @@ autoload -Uz add-zsh-hook
 typeset -ga ZSH_PROJECT_ROOTS=(
     "$HOME/Documents/GitHub"
     "$HOME/Documents/Projects"
+    "$HOME/projects"
     "/Volumes/T7/Projects"
-    "/home/tedo/projects"
-    "/root/agents"
 )
 
 function zsh_project_env() {

@@ -1,5 +1,7 @@
 # shellcheck disable=SC2034,SC2168,SC2128,SC2206
 
+# zemlekop: users-managed
+
 # .zshrc is sourced by interactive shells only.
 #
 # Environment variables and PATH live in .zshenv, so that non-interactive
@@ -141,7 +143,7 @@ fi
 # - $ZSH_CUSTOM/macos.zsh
 # For a full list of active aliases, run `alias`.
 
-alias git-rm-ignored='git ls-files -i -c -X .gitignore -z | xargs -0 git rm --cached --'
+alias git-rm-ignored='git ls-files -i -c -X .gitignore -z | xargs -r0 git rm --cached --'
 alias sshl='ssh -L localhost:8000:localhost:8000 -L localhost:8080:localhost:8080'
 
 # =============================================================================
@@ -155,6 +157,7 @@ command -v fnm &>/dev/null \
     && fnm use "$NODE_VERSION" &>/dev/null \
     || true
 
+
 # Ghostty
 
 if [[ $TERM_PROGRAM = ghostty || $TERM = xterm-ghostty ]]; then
@@ -163,16 +166,21 @@ if [[ $TERM_PROGRAM = ghostty || $TERM = xterm-ghostty ]]; then
     alias ssh="TERM=xterm-256color ssh"
 fi
 
+
 # yazi
 
-function y() {
-    local tmp
-    tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
-    command yazi "$@" --cwd-file="$tmp"
-    IFS= read -r -d '' cwd < "$tmp"
-    [ "$cwd" != "$PWD" ] && [ -d "$cwd" ] && builtin cd -- "$cwd"
-    rm -f -- "$tmp"
-}
+# https://yazi-rs.github.io/docs/quick-start
+
+if command -v yazi &>/dev/null; then
+    function y() {
+    	local tmp cwd; tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+    	command yazi "$@" --cwd-file="$tmp"
+    	IFS= read -r -d '' cwd < "$tmp"
+    	[ "$cwd" != "$PWD" ] && [ -d "$cwd" ] && builtin cd -- "$cwd" || builtin true
+    	command rm -f -- "$tmp"
+    }
+fi
+
 
 # SDKMAN
 
@@ -180,21 +188,51 @@ function y() {
 [[ -s $SDKMAN_DIR/bin/sdkman-init.sh ]] \
     && source "$SDKMAN_DIR/bin/sdkman-init.sh"
 
+
 # gcloud
 
 # shellcheck disable=SC1091
 [[ -f $HOME/.google-cloud-sdk/completion.zsh.inc ]] \
     && source "$HOME/.google-cloud-sdk/completion.zsh.inc"
 
+
 # direnv
 
 command -v direnv &>/dev/null \
     && eval "$(direnv hook zsh)"
 
+
 # openclaw
 
+# shellcheck disable=SC1091
 if [[ -f $HOME/.openclaw/completions/openclaw.zsh ]]; then
     source "$HOME/.openclaw/completions/openclaw.zsh"
+fi
+
+
+# orbstack
+
+# shellcheck disable=SC1091
+if [[ -f $HOME/.orbstack/shell/init.zsh ]]; then
+    source "$HOME/.orbstack/shell/init.zsh"
+fi
+
+
+# brew & root
+
+if command -v brew &>/dev/null; then
+    if [[ $(id -u) == 0 ]]; then
+        unalias brew
+
+        function brew() {
+            touch /.dockerenv
+            command brew "$@"
+            exit_code=$?
+            [[ -f /.dockerenv ]] \
+                && rm /.dockerenv
+            return $exit_code
+        }
+    fi
 fi
 
 # =============================================================================
@@ -267,12 +305,14 @@ function remind() {
     echo "journalctl -u nginx -f"
 }
 
+
 # =============================================================================
 # PATH sorter
 # =============================================================================
 
 (( $+functions[zsh_sort_path] )) \
     && zsh_sort_path
+
 
 # =============================================================================
 

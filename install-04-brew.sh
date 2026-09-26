@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# zemlekop: users-managed
+
 set -euo pipefail
 
 
@@ -13,7 +15,7 @@ if command -v brew >/dev/null 2>&1; then
 
 else
     # https://brew.sh/
-    bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 fi
 
@@ -24,11 +26,9 @@ esac
 
 eval "$("$brew_home/bin/brew" shellenv)"
 
-
 brew install --yes \
     jq yq \
     neovim \
-    uv \
     shellcheck \
     ripgrep fzf zoxide eza bat bat-extras fd procs \
     duf dust ncdu \

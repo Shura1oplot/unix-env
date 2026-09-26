@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# zemlekop: users-managed
+
 set -euo pipefail
 
 git config --global credential.helper store

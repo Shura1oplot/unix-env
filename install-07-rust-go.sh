@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+# zemlekop: users-managed
 
+set -euo pipefail
 
 if [[ $(id -u) == 0 ]]; then
     touch /.dockerenv
 fi
 
-brew install --yes go rustup
+brew install --yes go rustup zig
 
 if [[ $(id -u) == 0 && -f /.dockerenv ]]; then
     rm /.dockerenv

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# zemlekop: users-managed
+
 set -euo pipefail
 
 command -v apt-get &>/dev/null \
@@ -14,10 +16,8 @@ sudo apt-get install -y \
     htop \
     wget curl \
     ca-certificates \
-    zip unzip p7zip-full unar unrar \
-    neovim \
+    zip unzip unar 7zip 7zip-rar unrar \
     git \
-    build-essential \
-    jq shellcheck ripgrep
+    build-essential
 
-echo "sudo shutdown -r now"
+echo 'run `sudo shutdown -r now`'

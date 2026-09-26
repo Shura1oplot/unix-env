@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# zemlekop: users-managed
+
 set -euo pipefail
 
 THIS_SCRIPT_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"

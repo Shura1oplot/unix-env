@@ -1,8 +1,16 @@
 #!/usr/bin/env bash
 
+# zemlekop: users-managed
+
 set -euo pipefail
 
-files=(.zshrc .zshenv .zprofile .tmux.conf .config/nvim/init.lua)
+files=(
+    .zshrc
+    .zshenv
+    .zprofile
+    .tmux.conf
+    .config/nvim/init.lua
+)
 
 for fname in "${files[@]}"; do
     mkdir -p "$(dirname "$HOME/$fname")"
