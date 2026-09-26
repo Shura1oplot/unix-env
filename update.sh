@@ -100,10 +100,10 @@ if command -v fnm &>/dev/null; then
     unset npm_packages npm_list fnm_env
 fi
 
-
-rustup default stable
-rustup update
-
+if command -v rustup &>/dev/null; then
+    rustup default stable
+    rustup update
+fi
 
 if command -v codex &>/dev/null; then
     codex update
@@ -179,6 +179,7 @@ fi
 
 
 "$THIS_SCRIPT_DIR/sync-agent-env.sh"
+"$THIS_SCRIPT_DIR/patch-shell-snapshot.sh"
 
 
 echo "./update.sh done!"
