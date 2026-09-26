@@ -33,6 +33,7 @@ brew install --yes \
     ripgrep fzf zoxide eza bat bat-extras fd procs \
     duf dust ncdu \
     btop \
+    gum \
     yazi sevenzip font-symbols-only-nerd-font
 
 if [[ $(id -u) == 0 && -f /.dockerenv ]]; then
