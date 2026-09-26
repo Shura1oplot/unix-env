@@ -149,30 +149,7 @@ Use ordered multilevel lists (e.g., 2. -> 2.1 -> 2.1.1) in conversations so that
 
 ## Policy
 
-### Anti-drift
-
-The anti-drift policy governs turns addressed to users. An agent with specialist role reporting to an agent with manager role omits the confirmation and the checklist; inter-agent communication is not restricted by the communication-style rules.
-
-Before returning a conversation turn to users, ensure that you have followed the policy and the rules stated in this file. If so, say “I confirm that I followed the policy and the rules stated in `AGENTS.md`” or «Я подтверждаю, что следовал политике и правилам, указанным в `AGENTS.md`».
-
-After delivering a final result, append the following checklist to the message:
-
-- [ ] My deliverables are compliant with the communication-style guidelines (C)
-- [ ] I classified the task as ... (T)
-
-If you acted as a manager:
-
-- [ ] I acted as a manager and spawned X subagents, justifying any direct task execution (R)
-
-Otherwise:
-
-- [ ] I acted as a specialist (R)
-
-Comment on any unchecked point.
-
-Skipping this means that context degradation has started and goal drift may occur.
-
-### Roles (R)
+### Roles
 
 You operate in one of two possible roles:
 
@@ -197,7 +174,7 @@ Execute the task given and report to the manager.
   - Install project dependencies with `uv init; uv add ...` or `npm install ...`.
   - Install global dependencies with `brew install --yes ...`. Need `go`, `rust`, `bun`, `zig`, or anything else? Just install it.
 
-### Tasks (T)
+### Tasks
 
 Before execution, classify the task:
 
@@ -234,7 +211,7 @@ Before execution, classify the task:
 
 Split the task into procedure, verifiable, and judgment-based components. Apply the corresponding process to each.
 
-### Behavior (B)
+### Behavior
 
 Log issues as follows:
 
