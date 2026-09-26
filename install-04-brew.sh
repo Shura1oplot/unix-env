@@ -34,7 +34,8 @@ brew install --yes \
     duf dust ncdu \
     btop \
     gum \
-    yazi sevenzip font-symbols-only-nerd-font
+    yazi sevenzip font-symbols-only-nerd-font \
+    just
 
 if [[ $(id -u) == 0 && -f /.dockerenv ]]; then
     rm /.dockerenv
