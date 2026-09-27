@@ -94,23 +94,6 @@ fi
 
 unset brew_path brew_shadow_prefixes brew_keg_only
 
-# brew & root
-
-if command -v brew &>/dev/null; then
-    if [[ $(id -u) == 0 ]]; then
-        unalias brew &>/dev/null || true
-
-        function brew() {
-            touch /.dockerenv
-            command brew "$@"
-            exit_code=$?
-            [[ -f /.dockerenv ]] \
-                && rm /.dockerenv
-            return $exit_code
-        }
-    fi
-fi
-
 
 # rust
 

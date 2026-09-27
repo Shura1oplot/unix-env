@@ -27,6 +27,22 @@ if [[ $(uname) == Linux && $(id -u) != 0 ]]; then
 fi
 
 
+if command -v brew &>/dev/null; then
+    if [[ $(id -u) == 0 ]]; then
+        unalias brew &>/dev/null || true
+
+        function brew() {
+            touch /.dockerenv
+            command brew "$@"
+            exit_code=$?
+            [[ -f /.dockerenv ]] \
+                && rm /.dockerenv
+            return $exit_code
+        }
+    fi
+fi
+
+
 if [[ $(uname) == Linux ]] && $IS_SUDOER; then
     sudo apt-get update
     sudo apt-get dist-upgrade -y
@@ -47,6 +63,7 @@ if [[ $(uname) == Linux ]] && $IS_SUDOER; then
     fi
 fi
 
+
 if command -v brew &>/dev/null && $IS_BREW; then
     brew update
     brew upgrade --yes
@@ -54,7 +71,8 @@ if command -v brew &>/dev/null && $IS_BREW; then
 fi
 
 if command -v uv &>/dev/null; then
-    if brew list uv &>/dev/null; then
+    if command -v brew &>/dev/null \
+            && brew list uv &>/dev/null; then
         brew uninstall --yes uv
         curl -LsSf https://astral.sh/uv/install.sh | sh
     fi
