@@ -73,7 +73,7 @@ fi
 if command -v uv &>/dev/null; then
     if command -v brew &>/dev/null \
             && brew list uv &>/dev/null; then
-        brew uninstall --yes uv
+        brew uninstall uv
         curl -LsSf https://astral.sh/uv/install.sh | sh
     fi
 
