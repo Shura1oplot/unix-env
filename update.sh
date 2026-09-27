@@ -82,7 +82,7 @@ if command -v uv &>/dev/null; then
         --default --upgrade "$PYTHON_VERSION"
     uv tool upgrade --all \
         || uv tool upgrade --reinstall --all
-    uv cache prune
+    uv cache prune --force || true
 fi
 
 
