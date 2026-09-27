@@ -9,7 +9,9 @@ THIS_SCRIPT_DIR=$(dirname "$(realpath "${BASH_SOURCE[0]}")")
 source "$THIS_SCRIPT_DIR/.env"
 
 
-if [[ $(id -u) == 0 ]] || id -nG | grep -qw sudo; then
+if [[ $(id -u) == 0 ]] \
+        || id -nG | grep -qw sudo \
+        || id -nG | grep -qw google-sudoers; then
     IS_SUDOER=true
 else
     IS_SUDOER=false
