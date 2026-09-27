@@ -11,7 +11,8 @@ source "$THIS_SCRIPT_DIR/.env"
 
 if [[ $(id -u) == 0 ]] \
         || id -nG | grep -qw sudo \
-        || id -nG | grep -qw google-sudoers; then
+        || id -nG | grep -qw google-sudoers \
+        || sudo -n true &>/dev/null; then
     IS_SUDOER=true
 else
     IS_SUDOER=false
