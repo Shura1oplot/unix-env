@@ -222,7 +222,7 @@ fi
 
 if command -v brew &>/dev/null; then
     if [[ $(id -u) == 0 ]]; then
-        unalias brew
+        unalias brew &>/dev/null || true
 
         function brew() {
             touch /.dockerenv
@@ -239,7 +239,7 @@ fi
 # Hints
 # =============================================================================
 
-unalias du df ls grep find 2>/dev/null || true
+unalias du df ls grep find &>/dev/null || true
 
 function du() {
     if [[ -t 1 ]]; then
