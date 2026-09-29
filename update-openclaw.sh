@@ -10,6 +10,8 @@ source "$THIS_SCRIPT_DIR/.env"
 
 
 openclaw gateway stop --force || true
+curl -fsSL https://openclaw.ai/install-cli.sh |
+  bash -s -- --runtime-only --no-onboard
 openclaw update --yes --accept-capabilities || true
 OPENCLAW_SERVICE_REPAIR_POLICY=external \
     openclaw doctor --fix --force --non-interactive || true
