@@ -9,25 +9,31 @@ THIS_SCRIPT_DIR=$(dirname "$(realpath "${BASH_SOURCE[0]}")")
 source "$THIS_SCRIPT_DIR/.env"
 
 
-openclaw gateway stop --force || true
-curl -fsSL https://openclaw.ai/install-cli.sh |
-  bash -s -- --runtime-only --no-onboard
-openclaw update --yes --accept-capabilities || true
-OPENCLAW_SERVICE_REPAIR_POLICY=external \
-    openclaw doctor --fix --force --non-interactive || true
-openclaw update repair --yes || true
-OPENCLAW_SERVICE_REPAIR_POLICY=external \
-    openclaw doctor --fix --force --non-interactive || true
-openclaw gateway install --force || true
-openclaw gateway start || true
-sleep 10
-openclaw gateway status --require-rpc --deep || true
-openclaw gateway status --require-rpc || true
+set +e
 
-if command -v systemctl &>/dev/null; then
-    systemctl --user daemon-reload
-    systemctl --user restart openclaw-gateway.service || true
-fi
+set +o pipefail
 
+openclaw gateway stop --force
+curl -fsSL https://openclaw.ai/install-cli.sh \
+    | bash -s -- --runtime-only --no-onboard
+OPENCLAW_SERVICE_REPAIR_POLICY=external \
+    openclaw doctor --fix --force --non-interactive
+openclaw update repair --yes --accept-capabilities
+OPENCLAW_SERVICE_REPAIR_POLICY=external \
+    openclaw doctor --fix --force --non-interactive
+openclaw gateway install --force \
+    --runtime-path "$HOME/.openclaw/tools/node/bin/node"
+
+set -e
+
+set -o pipefail
+
+deadline=$((SECONDS + 120))
+
+until openclaw gateway status --require-rpc; do
+    (( SECONDS < deadline )) \
+        || exit 1
+    sleep 5
+done
 
 echo "./update-openclaw.sh done!"
