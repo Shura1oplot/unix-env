@@ -122,6 +122,10 @@ fi
 
 # User configuration
 
+if (( YAZI_LEVEL > 0 )); then
+    PROMPT="[yazi]$PROMPT"
+fi
+
 if [[ $HOST == lima-* ]]; then
     PROMPT="[vm]$PROMPT"
     parse_git_dirty() { :; }
