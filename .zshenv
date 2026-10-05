@@ -48,51 +48,64 @@ if [[ -e $brew_path/bin/brew ]]; then
     eval "$("$brew_path/bin/brew" shellenv)"
 fi
 
-if [[ $OSTYPE == darwin* && -n $HOMEBREW_PREFIX ]]; then
+if [[ -n $HOMEBREW_PREFIX ]]; then
+    if [[ $OSTYPE == darwin* ]]; then
 
-# brew info --installed --json=v1 | jq -r '
-#   .[] | select(
-#     .keg_only == false and
-#     (.caveats != null and (.caveats | contains("gnubin") or contains("libexec")))
-#   ) | .name'
+    # brew info --installed --json=v1 | jq -r '
+    #   .[] | select(
+    #     .keg_only == false and
+    #     (.caveats != null and (.caveats | contains("gnubin") or contains("libexec")))
+    #   ) | .name'
 
-    brew_shadow_prefixes=(
-        coreutils
-        findutils
-        gnu-sed
-        gnu-tar
-        gnu-which
-        gpatch
-        grep
-        libtool
-        make
-    )
+        brew_shadow_prefixes=(
+            coreutils
+            findutils
+            gnu-sed
+            gnu-tar
+            gnu-which
+            gpatch
+            grep
+            libtool
+            make
+        )
 
-    # brew info --installed --json=v1 | jq -r '.[] | select(.keg_only == true) | "\(.name): \(.keg_only_reason.reason)"'
-    # brew info --installed --json=v1 | jq -r '.[] | select(.keg_only == true and .keg_only_reason.reason == ":provided_by_macos") | .name'
-    brew_keg_only=(
-        curl
-        libarchive
-        m4
-        ncurses
-        sqlite
-        unzip
-        zip
-        zlib
-        ffmpeg-full
-        imagemagick-full
-    )
+        # brew info --installed --json=v1 | jq -r '.[] | select(.keg_only == true) | "\(.name): \(.keg_only_reason.reason)"'
+        # brew info --installed --json=v1 | jq -r '.[] | select(.keg_only == true and .keg_only_reason.reason == ":provided_by_macos") | .name'
+        brew_keg_only=(
+            curl
+            libarchive
+            m4
+            ncurses
+            sqlite
+            unzip
+            zip
+            zlib
+            ffmpeg-full
+            imagemagick-full
+            rustup
+        )
 
-    for pkg in $brew_shadow_prefixes; do
-        path=("$HOMEBREW_PREFIX/opt/$pkg/libexec/gnubin" $path)
-    done
+        for pkg in $brew_shadow_prefixes; do
+            path=("$HOMEBREW_PREFIX/opt/$pkg/libexec/gnubin" $path)
+        done
 
-    for pkg in $brew_keg_only; do
-        path=("$HOMEBREW_PREFIX/opt/$pkg/bin" $path)
-    done
+        for pkg in $brew_keg_only; do
+            path=("$HOMEBREW_PREFIX/opt/$pkg/bin" $path)
+        done
+
+    elif [[ $OSTYPE == linux* ]]; then
+        brew_keg_only=(
+            rustup
+        )
+
+        for pkg in $brew_keg_only; do
+            path=("$HOMEBREW_PREFIX/opt/$pkg/bin" $path)
+        done
+    fi
+
+    unset brew_path brew_shadow_prefixes brew_keg_only
 fi
 
-unset brew_path brew_shadow_prefixes brew_keg_only
 
 
 # rust
