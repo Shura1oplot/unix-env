@@ -5,6 +5,7 @@
 set -euo pipefail
 
 git config --global credential.helper store
+git config --global pull.rebase false
 
 # prefer ipv4
 # shellcheck disable=SC2028
