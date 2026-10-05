@@ -14,6 +14,7 @@ sudo apt-get install -y \
     zsh \
     tmux \
     htop \
+    lsof \
     wget curl \
     ca-certificates \
     zip unzip unar 7zip 7zip-rar unrar \

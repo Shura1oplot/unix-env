@@ -29,13 +29,14 @@ eval "$("$brew_home/bin/brew" shellenv)"
 brew install --yes \
     jq yq \
     neovim \
-    shellcheck \
+    gum \
     ripgrep fzf zoxide eza bat bat-extras fd procs \
     duf dust ncdu \
-    btop \
-    gum \
     yazi sevenzip font-symbols-only-nerd-font \
-    just
+    just \
+    btop \
+    shellcheck shfmt \
+    ast-grep
 
 if [[ $(id -u) == 0 && -f /.dockerenv ]]; then
     rm /.dockerenv
