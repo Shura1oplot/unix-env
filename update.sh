@@ -161,6 +161,10 @@ if command -v cloakbrowser &>/dev/null; then
     fi
 fi
 
+if command -v treg &>/dev/null; then
+    treg update
+fi
+
 if command -v agent-browser &>/dev/null; then
     agent_browser_args=
 
