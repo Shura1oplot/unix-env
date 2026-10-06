@@ -1,0 +1,10 @@
+onboarding = false
+[keys]
+cycle_pane_next = "shift+tab"
+
+[ui.toast]
+delivery = "terminal"
+
+[theme]
+name = "vesper"
+auto_switch = false

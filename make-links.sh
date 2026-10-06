@@ -10,6 +10,9 @@ files=(
     .zprofile
     .tmux.conf
     .config/nvim/init.lua
+    .config/yazi/yazi.toml
+    .config/yazi/keymap.toml
+    .config/herdr/config.toml
 )
 
 for fname in "${files[@]}"; do

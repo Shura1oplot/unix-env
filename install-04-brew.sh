@@ -36,8 +36,11 @@ brew install --yes \
     just \
     btop \
     shellcheck shfmt \
-    ast-grep
+    ast-grep \
+    glow
 
 if [[ $(id -u) == 0 && -f /.dockerenv ]]; then
     rm /.dockerenv
 fi
+
+ya pkg add KKV9/compress

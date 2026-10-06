@@ -1,0 +1,39 @@
+[[mgr.prepend_keymap]]
+on   = [ "c", "a", "a" ]
+run  = "plugin compress"
+desc = "Archive selected files"
+
+[[mgr.prepend_keymap]]
+on   = [ "c", "x" ]
+for = "unix"
+run = '''
+shell --block -- sh -c '
+    file="$1"
+    dir="${file%.*}"
+    mkdir -p "$dir"
+    7z x "$file" -o"$dir"
+' -- "%h"
+'''
+desc = "Extract archive to folder with archive name"
+
+[[mgr.prepend_keymap]]
+on = [ "g", "p" ]
+run = '''
+shell -- sh -c '
+  path="$(pbpaste | tr -d "\r\n")"
+  path="${path/#\~/$HOME}"
+
+  if [ -d "$path" ]; then
+    ya emit cd "$path"
+  elif [ -f "$path" ]; then
+    ya emit reveal "$path"
+  fi
+'
+'''
+desc = "Go to clipboard path"
+
+[[mgr.prepend_keymap]]
+on = [ "g", "f" ]
+for = "macos"
+run = "shell -- open -R %h"
+desc = "Reveal in Finder"

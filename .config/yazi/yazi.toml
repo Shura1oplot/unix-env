@@ -1,0 +1,10 @@
+[opener]
+glow = [
+    { run = 'glow -t -w 120 "$1"', block = true, desc = "Glow", for = "unix" },
+]
+
+[open]
+prepend_rules = [
+    { url = "*.md", use = "glow" },
+    { url = "*.markdown", use = "glow" },
+]
