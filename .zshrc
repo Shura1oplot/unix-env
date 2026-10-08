@@ -239,6 +239,13 @@ if command -v brew &>/dev/null; then
     fi
 fi
 
+# herdr
+
+if command -v herdr &>/dev/null; then
+    eval "$(herdr completion zsh)"
+fi
+
+
 # =============================================================================
 # Hints
 # =============================================================================
