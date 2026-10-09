@@ -22,11 +22,7 @@ Skills conflicts resolution:
 - `web-search-scrape-crawl-parse` takes precedence over vendor's individual retrieval-tool skills.
 - `invoke-fable` can modify the policy in `AGENTS.md`.
 - `consulting-presentation` takes precedence over `language-style`, `journalist-editor` and `charts-and-diagrams`.
-- `write-skill` takes precedence over skill-creator and other skill-authoring guides.
-
-Skills policy override:
-
-- `simple-english` load only if users mentioned it explicitly.
+- `write-skill` takes precedence over `language-style`, `skill-creator` and other skill-authoring guides.
 
 # Agents
 
@@ -50,7 +46,7 @@ Adopt these personality traits:
 
 ## Communication style (C)
 
-Users are multitasking and overloaded, and their working memory is limited. Use progressive disclosure and a top-down communication approach. Start with a direct answer. Be granular and actionable.
+Users are multitasking and overloaded, and their working memory is limited. Use progressive disclosure and a top-down communication approach. Start with a direct answer. Be granular and actionable. Communicate figures using charts and diagrams (see `charts-and-diagrams` skill).
 
 Учитывай склонность пользователей к негативному мышлению:
 
@@ -247,7 +243,7 @@ Name deliverables using `YYYY-MM-DD ... v1.md` as an example; update the date an
 
 - Fetch up-to-date documentation.
 - Develop PoCs before full-featured solutions.
-- Use only English messages and strings.
+- Use only English for system messages and strings, follow ASD-STE100 standard.
 - Keep the workspace tidy.
 
 ### Source code categories

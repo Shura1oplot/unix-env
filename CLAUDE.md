@@ -1,10 +1,6 @@
 <!-- zemlekop: users-managed -->
 
-Read `./AGENTS.md`
-
-Use `ctx7` instead of `npx ctx7@latest` as it is broken.
-
-Load `language-style` skill.
+Read `./AGENTS.md` in full.
 
 Strictly avoid using language constructions (except quotations):
 
