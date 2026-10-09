@@ -173,6 +173,11 @@ fi
 export PATH=$HOME/.openclaw/bin:$PATH
 
 
+# claude
+
+export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
+
+
 # =============================================================================
 # Project environment
 # =============================================================================
