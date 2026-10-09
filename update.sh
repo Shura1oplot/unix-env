@@ -166,7 +166,6 @@ if command -v treg &>/dev/null; then
 fi
 
 if command -v herdr &>/dev/null; then
-    herdr update
     if [[ ${TERM_PROGRAM:-} != herdr ]]; then
         herdr update
     fi
