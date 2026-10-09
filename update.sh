@@ -167,6 +167,9 @@ fi
 
 if command -v herdr &>/dev/null; then
     herdr update
+    if [[ ${TERM_PROGRAM:-} != herdr ]]; then
+        herdr update
+    fi
 fi
 
 if command -v agent-browser &>/dev/null; then
