@@ -8,3 +8,6 @@ delivery = "terminal"
 [theme]
 name = "vesper"
 auto_switch = false
+
+[update]
+channel = "preview"
