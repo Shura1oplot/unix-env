@@ -247,6 +247,27 @@ if command -v herdr &>/dev/null; then
 fi
 
 
+# claude --yolo
+
+function claude() {
+    local arg args=()
+
+    for arg in "$@"; do
+        if [[ $arg == --yolo ]]; then
+            args+=(
+                --allow-dangerously-skip-permissions
+                --permission-mode bypassPermissions
+                --settings '{"sandbox":{"enabled":false}}'
+            )
+        else
+            args+=("$arg")
+        fi
+    done
+
+    command claude "${args[@]}"
+}
+
+
 # =============================================================================
 # Hints
 # =============================================================================
