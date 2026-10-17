@@ -176,6 +176,8 @@ export PATH=$HOME/.openclaw/bin:$PATH
 # claude
 
 export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
+export CLAUDE_CODE_DISABLE_TELEMETRY=1
+export CLAUDE_CODE_DISABLE_ERROR_REPORTING=1
 
 
 # =============================================================================
