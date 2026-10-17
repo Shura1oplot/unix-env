@@ -3,6 +3,13 @@ onboarding = false
 [keys]
 cycle_pane_next = "shift+tab"
 
+# tools/herdr-pathpick in the zemlekop repository.
+[[keys.command]]
+key = "prefix+f"
+type = "plugin_action"
+command = "zemlekop.pathpick.pick"
+description = "pick a file path on screen"
+
 [ui.toast]
 delivery = "terminal"
 

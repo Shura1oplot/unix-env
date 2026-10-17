@@ -180,7 +180,7 @@ fi
 if command -v yazi &>/dev/null; then
     function y() {
     	local tmp cwd; tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
-    	command yazi "$@" --cwd-file="$tmp"
+    	command yazi "$@" --cwd-file="$tmp" --client-id "$$"
     	IFS= read -r -d '' cwd < "$tmp"
     	[ "$cwd" != "$PWD" ] && [ -d "$cwd" ] && builtin cd -- "$cwd" || builtin true
     	command rm -f -- "$tmp"
@@ -264,6 +264,10 @@ function claude() {
             args+=("$arg")
         fi
     done
+
+    if [[ $TERM_PROGRAM == herdr ]]; then
+        export FORCE_HYPERLINK=1
+    fi
 
     command claude "${args[@]}"
 }

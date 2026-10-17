@@ -8,3 +8,6 @@ prepend_rules = [
     { url = "*.md", use = "glow" },
     { url = "*.markdown", use = "glow" },
 ]
+
+[mgr]
+show_hidden = true
