@@ -150,10 +150,9 @@ fi
 alias git-rm-ignored='git ls-files -i -c -X .gitignore -z | xargs -r0 git rm --cached --'
 alias sshl='ssh -L localhost:8000:localhost:8000 -L localhost:8080:localhost:8080'
 alias a=eza
-alias codex='codex --no-daemon'
+
 
 # =============================================================================
-
 
 # fnm, Node.js
 
@@ -267,6 +266,15 @@ function claude() {
     done
 
     command claude "${args[@]}"
+}
+
+
+function codex() {
+    if (( ${@[(Ie)--no-daemon]} )); then
+        command codex "$@"
+    else
+        command codex --no-daemon "$@"
+    fi
 }
 
 
