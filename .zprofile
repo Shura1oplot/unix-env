@@ -5,23 +5,15 @@
 (( $+functions[zsh_sort_path] )) \
     && zsh_sort_path
 
-if [[ $- =~ i && -t 0 && -t 1 && -z $TMUX && -n $SSH_TTY \
-        && -z $LC_NO_TMUX ]]; then
-
-    echo "ZED_TERM=$ZED_TERM"
-    echo "ZED_ENVIRONMENT=$ZED_ENVIRONMENT"
-    echo "USER=$USER"
-    stat "$HOME/zemlekop/tools/zed/agent-terminal.sh"
-    sleep 10
-
+if [[ $- =~ i && -t 0 && -t 1 && -z $TMUX && -n $SSH_TTY ]]; then
     if [[ -n $ZED_TERM && -n $ZED_ENVIRONMENT && $USER == tedo \
             && -x "$HOME/zemlekop/tools/zed/agent-terminal.sh" ]]; then
-        echo "ololo"
-        sleep 10
         "$HOME/zemlekop/tools/zed/agent-terminal.sh" && exit
     fi
 
-    if command -v tmux >/dev/null 2>&1; then
-        exec tmux new-session -A -s ssh_tmux
+    if [[ -z $LC_NO_TMUX ]]; then
+        if command -v tmux >/dev/null 2>&1; then
+            exec tmux new-session -A -s ssh_tmux
+        fi
     fi
 fi
