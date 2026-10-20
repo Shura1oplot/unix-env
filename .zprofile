@@ -12,10 +12,12 @@ if [[ $- =~ i && -t 0 && -t 1 && -z $TMUX && -n $SSH_TTY \
     echo "ZED_ENVIRONMENT=$ZED_ENVIRONMENT"
     echo "USER=$USER"
     stat "$HOME/zemlekop/tools/zed/agent-terminal.sh"
+    sleep 10
 
     if [[ -n $ZED_TERM && -n $ZED_ENVIRONMENT && $USER == tedo \
             && -x "$HOME/zemlekop/tools/zed/agent-terminal.sh" ]]; then
         echo "ololo"
+        sleep 10
         "$HOME/zemlekop/tools/zed/agent-terminal.sh" && exit
     fi
 
