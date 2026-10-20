@@ -7,8 +7,15 @@
 
 if [[ $- =~ i && -t 0 && -t 1 && -z $TMUX && -n $SSH_TTY \
         && -z $LC_NO_TMUX ]]; then
+
+    echo "ZED_TERM=$ZED_TERM"
+    echo "ZED_ENVIRONMENT=$ZED_ENVIRONMENT"
+    echo "USER=$USER"
+    stat "$HOME/zemlekop/tools/zed/agent-terminal.sh"
+
     if [[ -n $ZED_TERM && -n $ZED_ENVIRONMENT && $USER == tedo \
             && -x "$HOME/zemlekop/tools/zed/agent-terminal.sh" ]]; then
+        echo "ololo"
         "$HOME/zemlekop/tools/zed/agent-terminal.sh" && exit
     fi
 
