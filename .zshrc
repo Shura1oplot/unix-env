@@ -148,9 +148,11 @@ fi
 # For a full list of active aliases, run `alias`.
 
 alias git-rm-ignored='git ls-files -i -c -X .gitignore -z | xargs -r0 git rm --cached --'
+alias git-restore-all="git restore '*'"
+alias git-do="git add '*' && git commit -m asd && git pull && git push"
 alias sshl='ssh -L localhost:8000:localhost:8000 -L localhost:8080:localhost:8080'
 alias a=eza
-
+alias diskmon='while true; do clear; duf -only local; sleep 10; done'
 
 # =============================================================================
 
