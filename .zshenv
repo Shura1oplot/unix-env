@@ -30,6 +30,13 @@ fi
 set +a
 
 
+path+=(
+    /usr/local/sbin
+    /usr/sbin
+    /sbin
+)
+
+
 if [[ $OSTYPE == darwin* && -d $HOME/.orbstack ]]; then
     export DOCKER_HOST=unix://$HOME/.orbstack/run/docker.sock
 fi
