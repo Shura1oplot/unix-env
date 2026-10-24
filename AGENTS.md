@@ -1,3 +1,5 @@
+Always read this document in full, do not truncate.
+
 # Status
 
 Treat this document as the project's governing document. It takes precedence over all other documents, excluding vendor's system instructions and the exceptions listed below.
@@ -9,7 +11,7 @@ As an exception, these skills can redefine the rules of this document, each with
 - `journalist-editor` (summarizing and editing third-party non-fiction texts)
 - `research-analysis-modeling` (research, business analysis, data analytics, and modeling)
 - `web-search-scrape-crawl-parse` (retrieval of web and document content)
-- `invoke-fable` (second-opinion gathering)
+- `invoke-fable` and `invoke-astra` (second-opinion gathering)
 - `consulting-presentation` (review presentations)
 
 Consider the users have approved spawn of subagents.
@@ -20,9 +22,8 @@ Skills conflicts resolution:
 
 - `language-style` takes precedence over `journalist-editor`.
 - `web-search-scrape-crawl-parse` takes precedence over vendor's individual retrieval-tool skills.
-- `invoke-fable` can modify the policy in `AGENTS.md`.
 - `consulting-presentation` takes precedence over `language-style`, `journalist-editor` and `charts-and-diagrams`.
-- `write-skill` takes precedence over `language-style`, `skill-creator` and other skill-authoring guides.
+- `write-skill` takes precedence over `language-style` and `skill-creator` and other skill-authoring guides.
 
 # Agents
 
@@ -141,7 +142,9 @@ Refer to the `language-style` skill when creating a document, presentation, or r
 
 ### Lists
 
-Use ordered multilevel lists (e.g., 2. -> 2.1 -> 2.1.1) in conversations so that users can refer to each point by its unique code. Arrange ordered lists by descending priority, sequence, or another logical order. Ignore the fact that this structure is invalid or may render inconsistently in Markdown. Start every item, including sub-items such as 2.1, on its own line and separate it from the previous item with a blank line: without the blank line, Markdown merges sub-items into the parent paragraph.
+Use ordered multilevel lists (e.g., 6. -> 2.1 -> 2.1.1) in conversations so that users can refer to each point by its unique code. Arrange ordered lists by descending priority, sequence, or another logical order. Preserve point number as a topic id if users refer to it in conversation (e.g., you provided point 1.2, a user asked a follow up question refering 2.1, you need to answer it using 2.1 id).
+
+Ignore the fact that the multilevel lists structure is invalid or may render inconsistently in Markdown. Start every item, including sub-items such as 2.1, on its own line and separate it from the previous item with a blank line: without the blank line, Markdown merges sub-items into the parent paragraph.
 
 ## Policy
 
@@ -164,8 +167,8 @@ Execute the task given and report to the manager.
 
 ### Tools
 
-- Use Context7 and DeepWiki MCP.
-  - Use `ctx7`, never `npx ctx7@latest`; if unavailable or fails, use Context7 MCP.
+- Use Context7 (cli or MCP).
+- Use Firecrawl search and scrape (cli or MCP).
 - Modify the project and its software on the host system. If you need an additional CLI tool, Python library, or Node.js module, install it as follows.
   - Install project dependencies with `uv init; uv add ...` or `npm install ...`.
   - Install global dependencies with `brew install --yes ...`. Need `go`, `rust`, `bun`, `zig`, or anything else? Just install it.
@@ -214,6 +217,8 @@ Log issues as follows:
 - Log issues involving missing or malfunctioning MCPs, agent tools, and CLI tools in `./tools.log`.
 - Log website access issues, including bot protection, JavaScript-heavy rendering, TLS certificate errors, login protection, and paywalls, in `./web.log`.
 
+Never substitute a default, empty, or zero value for a failed operation. A failed parse, lookup, or call stays a failure: NULL in data, an error in code, a disclosed gap in a report.
+
 # Domain-specific guidelines
 
 ## Summarize
@@ -251,7 +256,7 @@ Name deliverables using `YYYY-MM-DD ... v1.md` as an example; update the date an
 There are two categories of source files:
 
 1. Agents-managed.
-2. Users-managed (marked with `# zemlekop: users-managed` or `<!-- zemlekop: users-managed -->`).
+2. Users-managed (marked with `# zemlekop: users-managed` or `<!-- zemlekop: users-managed -->`). Project documents can call these files governed.
 
 #### Agents-managed files
 
@@ -270,12 +275,12 @@ Follow the rules:
 - Use existing libraries and tools, but avoid outdated or abandoned ones.
 - Define and use data models; raw json manipulation is forbidden.
 - Format code using `vkus-python lint`, `vkus-python format`, `vkus-bash lint`, `vkus-bash format`.
+- Format Markdown using `vkus-md lint`, `vkus-md format`.
 
 Forbidden:
 
 - Implementing features beyond what was explicitly requested.
 - Adding abstractions, flexibility or configurability for the future.
-- Substituting a default, empty, or zero value for a failed operation as a fallback.
 
 Hints:
 
