@@ -30,19 +30,18 @@ if [[ $(uname) == Linux && $(id -u) != 0 ]]; then
 fi
 
 
-if command -v brew &>/dev/null; then
-    if [[ $(id -u) == 0 ]]; then
-        unalias brew &>/dev/null || true
+if [[ $(uname) == Linux ]] \
+        && command -v brew &>/dev/null \
+        && [[ $(id -u) == 0 ]]; then
+    unalias brew &>/dev/null || true
 
-        function brew() {
-            touch /.dockerenv
-            command brew "$@"
-            exit_code=$?
-            [[ -f /.dockerenv ]] \
-                && rm /.dockerenv
-            return $exit_code
-        }
-    fi
+    function brew() {
+        (
+            runuser -u brew -- test -r . \
+                || cd /
+            runuser -u brew -- "$HOMEBREW_PREFIX/bin/brew" "$@"
+        )
+    }
 fi
 
 

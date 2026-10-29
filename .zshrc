@@ -228,19 +228,22 @@ fi
 
 # brew & root
 
-if command -v brew &>/dev/null; then
-    if [[ $(id -u) == 0 ]]; then
-        unalias brew &>/dev/null || true
+if [[ $OSTYPE == linux* ]] \
+        && command -v brew &>/dev/null \
+        && [[ $(id -u) == 0 ]]; then
+    unalias brew &>/dev/null || true
 
-        function brew() {
-            touch /.dockerenv
-            command brew "$@"
-            exit_code=$?
-            [[ -f /.dockerenv ]] \
-                && rm /.dockerenv
-            return $exit_code
-        }
-    fi
+    function brew() {
+        if ! id brew &>/dev/null; then
+            useradd -m brew
+            chown -R brew "$HOMEBREW_PREFIX"
+        fi
+
+        (
+            runuser -u brew -- test -r . || cd /
+            runuser -u brew -- "$HOMEBREW_PREFIX/bin/brew" "$@"
+        )
+    }
 fi
 
 # herdr
