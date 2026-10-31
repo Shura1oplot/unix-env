@@ -21,4 +21,5 @@ sudo apt-get install -y \
     git \
     build-essential
 
+# shellcheck disable=SC2016
 echo 'run `sudo shutdown -r now`'
