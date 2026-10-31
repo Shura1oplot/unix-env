@@ -44,6 +44,9 @@ fi
 
 # brew
 
+# shellcheck disable=SC2034
+skip_global_compinit=1
+
 brew_path=
 
 case $OSTYPE in
