@@ -4,7 +4,7 @@
 
 set -euo pipefail
 
-THIS_SCRIPT_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
+THIS_SCRIPT_DIR=$(dirname "$(realpath "${BASH_SOURCE[0]}")")
 
 source "$THIS_SCRIPT_DIR/.env"
 

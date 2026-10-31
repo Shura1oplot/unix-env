@@ -69,7 +69,6 @@ write_settings "$user_settings" "$base_path"
 
 # The project roots are declared once, in .zshenv.
 # shellcheck disable=SC2016 # expanded by the zsh child, not by this script
-
 while read -r root; do
     [[ -d $root ]] \
         || continue

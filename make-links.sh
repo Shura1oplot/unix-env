@@ -13,10 +13,15 @@ files=(
     .config/yazi/yazi.toml
     .config/yazi/keymap.toml
     .config/herdr/config.toml
+    .config/ghostty/config
 )
 
 for fname in "${files[@]}"; do
     mkdir -p "$(dirname "$HOME/$fname")"
-    [[ -e "$HOME/$fname" ]] && mv -f -- "$HOME/$fname" "$HOME/$fname.bak"
+
+    if [[ -e "$HOME/$fname" ]]; then
+        mv -f -- "$HOME/$fname" "$HOME/$fname.bak"
+    fi
+
     ln -s -- "$(pwd)/$fname" "$HOME/$fname"
 done

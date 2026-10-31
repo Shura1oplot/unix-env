@@ -16,17 +16,20 @@
 # zsh_sort_path declares `path` with typeset -gaU, which drops duplicates.
 
 set -euo pipefail
+
 shopt -s nullglob
 
 marker='# sync-agent-env: PATH restored'
 
 # Only zsh snapshots: .zshenv is zsh syntax and would break a bash snapshot.
+
 for snapshot in "$HOME"/.claude/shell-snapshots/snapshot-zsh-*.sh; do
-    grep -qF "$marker" "$snapshot" && continue
+    grep -qF "$marker" "$snapshot" \
+        && continue
 
     # shellcheck disable=SC2016 # expanded by the snapshot shell, not by this script
     printf '\n%s\n[[ -f $HOME/.zshenv ]] && source "$HOME/.zshenv"\n' \
-        "$marker" >> "$snapshot"
+        "$marker" >>"$snapshot"
 done
 
 exit 0

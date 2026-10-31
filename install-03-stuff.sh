@@ -4,7 +4,6 @@
 
 set -euo pipefail
 
-
 git config --global credential.helper store
 git config --global pull.rebase false
 
@@ -18,7 +17,8 @@ fi
 
 
 if [[ $(id -un) == pi ]]; then
-    echo 'pi ALL=(ALL:ALL) NOPASSWD: ALL' | sudo tee /etc/sudoers.d/010_pi-nopasswd >/dev/null
+    echo 'pi ALL=(ALL:ALL) NOPASSWD: ALL' \
+        | sudo tee /etc/sudoers.d/010_pi-nopasswd >/dev/null
     sudo chmod 0440 /etc/sudoers.d/010_pi-nopasswd
     sudo visudo -cf /etc/sudoers.d/010_pi-nopasswd
 fi
