@@ -95,6 +95,9 @@ case $OSTYPE in
     linux*)
         plugins+=(systemd)
 
+        # Linuxbrew files belong to the brew user; compaudit would reject them.
+        ZSH_DISABLE_COMPFIX=true
+
         if [[ -f /etc/lsb-release ]]; then
             linux_distrib=$(cat /etc/lsb-release | grep DISTRIB_ID | cut -d= -f2)
 

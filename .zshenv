@@ -44,6 +44,10 @@ fi
 
 # brew
 
+# Ubuntu's /etc/zsh/zshrc runs a bare compinit, which asks about Linuxbrew
+# files owned by the brew user. Oh My Zsh runs compinit itself.
+skip_global_compinit=1
+
 brew_path=
 
 case $OSTYPE in
