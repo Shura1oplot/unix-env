@@ -46,6 +46,7 @@ fi
 
 # Ubuntu's /etc/zsh/zshrc runs a bare compinit, which asks about Linuxbrew
 # files owned by the brew user. Oh My Zsh runs compinit itself.
+# shellcheck disable=SC2034
 skip_global_compinit=1
 
 brew_path=
@@ -184,12 +185,13 @@ fi
 export PATH=$HOME/.openclaw/bin:$PATH
 
 
-# claude
+# claude code cli
 
 export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
 export CLAUDE_CODE_DISABLE_TELEMETRY=1
 export CLAUDE_CODE_DISABLE_ERROR_REPORTING=1
 
+export CLAUDE_CODE_EVEN_MORE_DANGEROUSLY_SKIP_PERMISSIONS=1
 export CLAUDE_CODE_DISABLE_MOUNTED_DRIVE_RM_PROMPT=1
 export CLAUDE_CODE_DISABLE_SUBSTITUTION_RM_PROMPT=1
 export CLAUDE_CODE_DISABLE_INLINE_SHELL_RM_PROMPT=1

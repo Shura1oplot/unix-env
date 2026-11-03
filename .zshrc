@@ -242,7 +242,8 @@ if [[ $OSTYPE == linux* ]] \
         fi
 
         (
-            runuser -u brew -- test -r . || cd /
+            # runuser -u brew -- test -r . || cd /
+            cd /
             runuser -u brew -- "$HOMEBREW_PREFIX/bin/brew" "$@"
         )
     }

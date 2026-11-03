@@ -37,8 +37,9 @@ if [[ $(uname) == Linux ]] \
 
     function brew() {
         (
-            runuser -u brew -- test -r . \
-                || cd /
+            # runuser -u brew -- test -r . \
+            #     || cd /
+            cd /
             runuser -u brew -- "$HOMEBREW_PREFIX/bin/brew" "$@"
         )
     }
