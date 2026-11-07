@@ -190,8 +190,10 @@ fi
 "$THIS_SCRIPT_DIR/patch-shell-snapshot.sh"
 
 
+echo "./update.sh done!"
+
+
+echo "./cleanup.sh"
 echo "sudo docker image prune --all --force"
 echo "sudo docker system prune --all --force"
-
-
-echo "./update.sh done!"
+echo "sudo shutdown -r now"
