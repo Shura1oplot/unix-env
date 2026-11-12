@@ -10,6 +10,15 @@ type = "plugin_action"
 command = "zemlekop.pathpick.pick"
 description = "pick a file path on screen"
 
+# tools/usage-limits in the zemlekop repository; q or Esc Esc closes.
+[[keys.command]]
+key = "prefix+u"
+type = "popup"
+command = "\"$HOME/.local/bin/usage-limits\" --watch"
+description = "show usage limits"
+width = 51
+height = 15
+
 [ui.toast]
 delivery = "terminal"
 

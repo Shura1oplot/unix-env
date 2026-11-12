@@ -61,7 +61,9 @@ done
 
 # Retain the newest browser build of each tool and the newest Node.js of OpenClaw.
 
-for pattern in "$HOME/.cloakbrowser/chromium-*-pro" "$HOME/.agent-browser/browsers/chrome-*" \
+for pattern in \
+        "$HOME/.cloakbrowser/chromium-*-pro" \
+        "$HOME/.agent-browser/browsers/chrome-*" \
         "$HOME/.openclaw/tools/node-v*"; do
     mapfile -t dirs < <(compgen -G "$pattern" | sort -Vr)
     rm -rf -- "${dirs[@]:1}"

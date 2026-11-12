@@ -491,4 +491,5 @@ GitHub.sublime-settings
 *.log
 
 # zemlekop: project-specific
+!.env
 tmp/
