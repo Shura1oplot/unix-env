@@ -1,8 +1,33 @@
 #!/usr/bin/env bash
 
-# zemlekop: users-managed
-
 set -euo pipefail
+
+
+IS_BREW=true
+
+if [[ $(uname) == Linux && $(id -u) != 0 ]]; then
+    brew_group=$(stat -c '%G' /home/linuxbrew/.linuxbrew/Cellar)
+
+    if ! id -nG | grep -qw "$brew_group"; then
+        IS_BREW=false
+    fi
+fi
+
+if [[ $(uname) == Linux ]] \
+        && command -v brew &>/dev/null \
+        && [[ $(id -u) == 0 ]]; then
+    unalias brew &>/dev/null || true
+
+    function brew() {
+        (
+            # runuser -u brew -- test -r . \
+            #     || cd /
+            cd /
+            runuser -u brew -- "$HOMEBREW_PREFIX/bin/brew" "$@"
+        )
+    }
+fi
+
 
 declare -A latest=() python_remove=()
 
@@ -54,7 +79,11 @@ done
 
 uv cache clean --force
 npm cache clean --force
-brew cleanup --prune=all
+
+if command -v brew &>/dev/null && $IS_BREW; then
+    brew cleanup --prune=all
+fi
+
 rm -rf -- "$HOME/.cache/node-gyp" "$HOME/Library/Caches/node-gyp" "$HOME/.cache/zig" \
     "$HOME/.local/share/Trash"
 

@@ -29,7 +29,6 @@ if [[ $(uname) == Linux && $(id -u) != 0 ]]; then
     fi
 fi
 
-
 if [[ $(uname) == Linux ]] \
         && command -v brew &>/dev/null \
         && [[ $(id -u) == 0 ]]; then
