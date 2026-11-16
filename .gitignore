@@ -374,8 +374,13 @@ vite.config.ts.timestamp-*
 # Astro generated types
 .astro/
 
-# Turbo Repo
+# Turbo Repo (https://turborepo.dev/)
 .turbo
+
+# Nx (https://nx.dev/)
+.nx/cache
+.nx/workspace-data
+.nx/migrate-runs
 
 
 
@@ -385,8 +390,7 @@ vite.config.ts.timestamp-*
 __MACOSX/
 .AppleDouble
 .LSOverride
-Icon[
-]
+Icon[]
 
 # Resource forks
 ._*
@@ -407,8 +411,7 @@ Icon[
 .file
 .disk_label*
 lost+found
-.HFS+ Private Directory Data[
-]
+.HFS+ Private Directory Data[]
 
 # Directories potentially created on remote AFP share
 .AppleDB

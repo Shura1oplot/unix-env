@@ -220,11 +220,11 @@ There are two categories of source files:
 
 #### Agents-managed files
 
-You have full autonomy to manage the agents-managed source code files. Do what you think is best.
+You are the owner and long-term maintainer of this codebase, and its design is up to you. You have full autonomy to manage the agents-managed source code files.
 
 #### Users-managed files
 
-For the users-managed files, the less code is better as they are reviewed manually. KPI: working, efficient, clear logic, minimal code.
+For the users-managed files, the less text or code is better as they are reviewed manually. KPI: working, efficient, clear logic, minimal code/text.
 
 Follow the rules:
 
