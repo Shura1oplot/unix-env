@@ -13,6 +13,7 @@ files=(
     .config/yazi/yazi.toml
     .config/yazi/keymap.toml
     .config/herdr/config.toml
+    .config/herdr-app/keys.json
     .config/ghostty/config
 )
 

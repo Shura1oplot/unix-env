@@ -169,6 +169,9 @@ if command -v herdr &>/dev/null; then
     if [[ ${TERM_PROGRAM:-} != herdr ]]; then
         herdr update
     fi
+
+    herdr integration install codex
+    herdr integration install claude
 fi
 
 if command -v agent-browser &>/dev/null; then
