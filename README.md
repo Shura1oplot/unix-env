@@ -18,8 +18,8 @@
 
 Текущие интерпретаторы, виртуальные окружения, программы `uv tool` и псевдонимы fnm не защищают старую версию от удаления. Удаление Python может нарушить зависимые окружения, а удаление Node.js также удаляет глобальные пакеты и псевдонимы этой версии.
 
-Очистка кэшей использует `uv cache clean --force`, `npm cache clean --force` и `brew cleanup`. На Ubuntu также выполняется `sudo apt-get clean`. Кэш npm очищается до удаления Node.js. Содержимое кэшей при необходимости загружается повторно.
+Очистка кэшей использует `uv cache clean --force`, `npm cache clean --force` и `brew cleanup --prune=all`. На Ubuntu также выполняется `sudo apt-get clean`. Кэши node-gyp в `~/.cache/node-gyp` и `~/Library/Caches/node-gyp`, кэш Zig `~/.cache/zig` и корзина Linux `~/.local/share/Trash` удаляются полностью. Корзина macOS не затрагивается. Кэш npm очищается до удаления Node.js. Содержимое кэшей при необходимости загружается повторно.
 
-У cloakbrowser, agent-browser и OpenClaw сохраняется последняя версия загруженного браузера или Node.js в `~/.cloakbrowser`, `~/.agent-browser/browsers` и `~/.openclaw/tools`; остальные версии удаляются. Каталог `~/.openclaw.update-captures` не затрагивается.
+У cloakbrowser, agent-browser, Puppeteer и OpenClaw сохраняется последняя версия загруженного браузера или Node.js в `~/.cloakbrowser`, `~/.agent-browser/browsers`, `~/.cache/puppeteer/chrome`, `~/.cache/puppeteer/chrome-headless-shell` и `~/.openclaw/tools`; остальные версии удаляются. Каталог `~/.openclaw.update-captures` не затрагивается.
 
-Сценарий не удаляет пользовательские документы, каталоги проектов, корзину, общие каталоги кэшей, данные Docker и системные журналы.
+Сценарий не удаляет пользовательские документы, каталоги проектов, другие каталоги кэшей, данные Docker и системные журналы. Кэш Homebrew пользователя `root` не очищается: Homebrew не запускается от имени `root`.

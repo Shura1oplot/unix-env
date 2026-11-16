@@ -54,6 +54,9 @@ done
 
 uv cache clean --force
 npm cache clean --force
+brew cleanup --prune=all
+rm -rf -- "$HOME/.cache/node-gyp" "$HOME/Library/Caches/node-gyp" "$HOME/.cache/zig" \
+    "$HOME/.local/share/Trash"
 
 for key in "${node_remove[@]}"; do
     fnm uninstall "$key"
@@ -64,6 +67,8 @@ done
 for pattern in \
         "$HOME/.cloakbrowser/chromium-*-pro" \
         "$HOME/.agent-browser/browsers/chrome-*" \
+        "$HOME/.cache/puppeteer/chrome/*" \
+        "$HOME/.cache/puppeteer/chrome-headless-shell/*" \
         "$HOME/.openclaw/tools/node-v*"; do
     mapfile -t dirs < <(compgen -G "$pattern" | sort -Vr)
     rm -rf -- "${dirs[@]:1}"

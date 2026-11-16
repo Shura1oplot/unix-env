@@ -199,6 +199,8 @@ export CLAUDE_CODE_DISABLE_INLINE_SHELL_RM_PROMPT=1
 export CLAUDE_CODE_DISABLE_ARTIFACT=1
 export CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY=1
 
+export CLAUDE_CODE_EXPERIMENTAL_CODE_MODE=1
+
 
 # =============================================================================
 # Project environment
