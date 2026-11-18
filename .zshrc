@@ -153,6 +153,7 @@ fi
 alias git-rm-ignored='git ls-files -i -c -X .gitignore -z | xargs -r0 git rm --cached --'
 alias gg="git add '*'; git commit -m commit; git pull && git push"
 alias sshl='ssh -L localhost:8000:localhost:8000 -L localhost:8080:localhost:8080'
+alias sshl1='ssh -L localhost:8000:localhost:8001 -L localhost:8080:localhost:8081'
 alias a=eza
 alias diskmon='while true; do clear; duf -only local; sleep 10; done'
 
@@ -170,9 +171,11 @@ command -v fnm &>/dev/null \
 
 # Ghostty
 
-if [[ $TERM_PROGRAM = ghostty || $TERM = xterm-ghostty ]]; then
-    command -v mc &>/dev/null \
-        && alias mc="TERM=xterm-256color mc"
+if [[ $TERM_PROGRAM == ghostty || $TERM == xterm-ghostty ]]; then
+    if command -v mc &>/dev/null; then
+        alias mc="TERM=xterm-256color mc"
+    fi
+
     alias ssh="TERM=xterm-256color ssh"
 fi
 
@@ -184,7 +187,7 @@ fi
 if command -v yazi &>/dev/null; then
     function y() {
     	local tmp cwd; tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
-    	command yazi "$@" --cwd-file="$tmp" --client-id "$$"
+    	command yazi "$@" --cwd-file="$tmp"
     	IFS= read -r -d '' cwd < "$tmp"
     	[ "$cwd" != "$PWD" ] && [ -d "$cwd" ] && builtin cd -- "$cwd" || builtin true
     	command rm -f -- "$tmp"
@@ -195,21 +198,24 @@ fi
 # SDKMAN
 
 # shellcheck disable=SC1091
-[[ -s $SDKMAN_DIR/bin/sdkman-init.sh ]] \
-    && source "$SDKMAN_DIR/bin/sdkman-init.sh"
+if [[ -s $SDKMAN_DIR/bin/sdkman-init.sh ]]; then
+    source "$SDKMAN_DIR/bin/sdkman-init.sh"
+fi
 
 
 # gcloud
 
 # shellcheck disable=SC1091
-[[ -f $HOME/.google-cloud-sdk/completion.zsh.inc ]] \
-    && source "$HOME/.google-cloud-sdk/completion.zsh.inc"
+if [[ -f $HOME/.google-cloud-sdk/completion.zsh.inc ]]; then
+    source "$HOME/.google-cloud-sdk/completion.zsh.inc"
+fi
 
 
 # direnv
 
-command -v direnv &>/dev/null \
-    && eval "$(direnv hook zsh)"
+if command -v direnv &>/dev/null; then
+    eval "$(direnv hook zsh)"
+fi
 
 
 # openclaw
@@ -249,12 +255,6 @@ if [[ $OSTYPE == linux* ]] \
     }
 fi
 
-# herdr
-
-if command -v herdr &>/dev/null; then
-    eval "$(herdr completion zsh)"
-fi
-
 
 # claude --yolo
 
@@ -273,10 +273,6 @@ function claude() {
         fi
     done
 
-    if [[ $TERM_PROGRAM == herdr ]]; then
-        export FORCE_HYPERLINK=1
-    fi
-
     command claude "${args[@]}"
 }
 
@@ -288,6 +284,13 @@ function codex() {
         command codex --no-daemon "$@"
     fi
 }
+
+
+# shellcheck disable=SC1091
+
+if [[ -e "$HOME/Documents/GitHub/zemlekop/herdr/restore/herdr-restore.zsh" ]]; then
+    source "$HOME/Documents/GitHub/zemlekop/herdr/restore/herdr-restore.zsh"
+fi
 
 
 # =============================================================================
@@ -369,6 +372,4 @@ function remind() {
     && zsh_sort_path
 
 
-# =============================================================================
-
-# echo ".zshrc ok"
+# THIS LINE MUST BE THE LAST IN THE FILE

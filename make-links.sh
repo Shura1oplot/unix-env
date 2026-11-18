@@ -12,9 +12,6 @@ files=(
     .config/nvim/init.lua
     .config/yazi/yazi.toml
     .config/yazi/keymap.toml
-    .config/herdr/config.toml
-    .config/herdr-app/keys.json
-    .config/herdr-app/layouts/main-usage.json
     .config/ghostty/config
 )
 
