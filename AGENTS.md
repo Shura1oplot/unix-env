@@ -133,6 +133,7 @@ Execute the task given and report to the manager.
   - Install project dependencies with `uv init; uv add ...` or `npm install ...`.
   - Install global dependencies with `brew install --yes ...`.
   - Install `go`, `rust`, `bun`, `zig` if needed.
+- On a shared Linux server, run each job that can use more than 2 GB of RAM in its own memory scope: `systemd-run --user --scope -q -p MemoryMax=6G -p MemorySwapMax=0 -- <command>`. Without the scope, one large job can stall all users and agents on the server. Exit code 137 means that the job hit the limit. In that case, reduce the memory use of the job (for example, Polars lazy or streaming mode, fewer columns, chunks). Do not raise the limit.
 
 ### Tasks
 
