@@ -202,6 +202,13 @@ export CLAUDE_CODE_DISABLE_ARTIFACT=1
 export CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY=1
 
 
+# there must not be default values
+
+unset HTTPS_PROXY
+unset HTTP_PROXY
+unset NO_PROXY
+
+
 # =============================================================================
 # Project environment
 # =============================================================================
