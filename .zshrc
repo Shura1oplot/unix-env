@@ -290,7 +290,7 @@ function agy() {
     HTTPS_PROXY=http://192.168.5.4:55440 \
         HTTP_PROXY=http://192.168.5.4:55440 \
         NO_PROXY=localhost,127.0.0.1 \
-        command agy "$@"
+        command agy --dangerously-skip-permissions "$@"
 }
 
 
