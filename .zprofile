@@ -17,3 +17,7 @@ if [[ $- =~ i && -t 0 && -t 1 && -z $TMUX && -n $SSH_TTY ]]; then
         fi
     fi
 fi
+
+
+# Added by Antigravity CLI installer
+export PATH="/Users/alexandergordeev/.local/bin:$PATH"
