@@ -286,6 +286,13 @@ function codex() {
 }
 
 
+# macos ssh stuff
+
+function unlock-keychain() {
+    /usr/bin/security unlock-keychain "$HOME/Library/Keychains/login.keychain-db"
+}
+
+
 # shellcheck disable=SC1091
 
 if [[ -e "$HOME/Documents/GitHub/zemlekop/herdr/restore/herdr-restore.zsh" ]]; then
