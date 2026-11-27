@@ -293,15 +293,16 @@ function agy() {
         if [[ $arg == --yolo ]]; then
             args+=(
                 --dangerously-skip-permissions
+                --mode=accept-edits
             )
         else
             args+=("$arg")
         fi
     done
 
-    HTTPS_PROXY=http://192.168.5.4:55440 \
-        HTTP_PROXY=http://192.168.5.4:55440 \
-        NO_PROXY=localhost,127.0.0.1 \
+    # HTTPS_PROXY=http://192.168.5.4:55440 \
+    #     HTTP_PROXY=http://192.168.5.4:55440 \
+    #     NO_PROXY=localhost,127.0.0.1 \
         command agy "${args[@]}" "$@"
 }
 
